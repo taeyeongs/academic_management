@@ -17,7 +17,6 @@
 	<tr><td><button onclick="login_form();">로그인</button></td></tr>
 </table>
 </form>
-
 </section>
 </body>
 </html>

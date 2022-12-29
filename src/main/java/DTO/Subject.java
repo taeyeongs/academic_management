@@ -7,8 +7,21 @@ package DTO;
 // 점수
 //
 public class Subject {
-	private String studentId;
+	private int studentNo;
 	private String subjectName;
-	private String score;
+	
+	public int getStudentNo() {
+		return studentNo;
+	}
+	public void setStudentNo(int studentNo) {
+		this.studentNo = studentNo;
+	}
+	public String getSubjectName() {
+		return subjectName;
+	}
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+	
 	
 }

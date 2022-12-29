@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+* {padding:0; margin:0;}
+
+a {text-decoration:none; color:#000;}
+ul{list-style: none;color:#000;}
+ul li{list-style-type: none;color:#000;}
+nav { background-color:aqua;overflow: hidden;}
+nav > ul > li {float:left;}
+nav > ul > li > a {height:50px;line-height:50px; padding:0 10px;}

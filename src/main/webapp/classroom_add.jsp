@@ -9,15 +9,13 @@
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
+<%@include file="./top.jsp" %>
 <section>
-<form name="login" method="post" action="login_check">
-<table>
-	<tr><td><input type="text" name="id"></td></tr>
-	<tr><td><input type="text" name="pw"></td></tr>
-	<tr><td><button onclick="login_form();">로그인</button></td></tr>
-</table>
+<form name="classroom" action="classroom_insert">
+교실명<input name="classroom_name">
+정원수<input name="classroom_personnel">
 </form>
-
 </section>
+<%@include file="./footer.jsp" %>
 </body>
 </html>

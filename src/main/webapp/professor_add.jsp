@@ -9,15 +9,16 @@
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
+<%@include file="./top.jsp" %>
 <section>
-<form name="login" method="post" action="login_check">
-<table>
-	<tr><td><input type="text" name="id"></td></tr>
-	<tr><td><input type="text" name="pw"></td></tr>
-	<tr><td><button onclick="login_form();">로그인</button></td></tr>
-</table>
+<form name="professor" action="professor_insert">
+<input name="id">
+<input type="password" name="pw">
+<input name="prof_name">
+<input name="prof_birth">
+<textarea name="prof_history"></textarea>
 </form>
-
 </section>
+<%@include file="./footer.jsp" %>
 </body>
 </html>

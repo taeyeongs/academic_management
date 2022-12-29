@@ -9,15 +9,13 @@
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
+<%@include file="./top.jsp" %>
 <section>
-<form name="login" method="post" action="login_check">
-<table>
-	<tr><td><input type="text" name="id"></td></tr>
-	<tr><td><input type="text" name="pw"></td></tr>
-	<tr><td><button onclick="login_form();">로그인</button></td></tr>
-</table>
-</form>
-
+<div>
+dashboard
+<button onclick="location.href='./logout_check'">로그아웃</button>
+</div>
 </section>
+<%@include file="./footer.jsp" %>
 </body>
 </html>
