@@ -22,43 +22,43 @@ function login_form() {
 function student_form() {
 	let student = document.student;
 	
-	if(student.id.trim() == "") {
+	if(student.id.value.trim() == "") {
 		alert("아이디를 입력해주세요");
 		student.id.focse();
 		return false;
 	}
 	
-	if(student.pw.trim() == "") {
+	if(student.pw.value.trim() == "") {
 		alert("비밀번호를 입력해주세요.");
 		student.pw.focse();
 		return false;
 	}
 	
-	if(student.student_name.trim() == "") {
+	if(student.student_name.value.trim() == "") {
 		alert("학생이름을 입력해주세요.");
 		student.student_name.focse();
 		return false;
 	}
 	
-	if(student.student_class.trim() == "") {
+	if(student.student_class.value.trim() == "") {
 		alert("학과를 입력해주세요.");
 		student.student_class.focse();
 		return false;
 	}
 	
-	if(student.student_year.trim() == "") {
+	if(student.student_year.value.trim() == "") {
 		alert("학년을 입력해주세요.");
 		student.student_year.focse();
 		return false;
 	}
 	
-	if(student.student_birth.trim() == "") {
+	if(student.student_birth.value.trim() == "") {
 		alert("생일을 입력해주세요.");
 		student.student_birth.focse();
 		return false;
 	}
 	
-	if(student.student_phone.trim() == "") {
+	if(student.student_phone.value.trim() == "") {
 		alert("전화번호를 입력해주세요.");
 		student.student_phone.focse();
 		return false;

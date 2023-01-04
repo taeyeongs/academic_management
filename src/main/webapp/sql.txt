@@ -1,0 +1,88 @@
+
+--create user academic identified by academic1234;
+--grant connect, resource, dba to academic;
+
+
+create table login(
+    login_id varchar2(100) primary key,
+    login_pw varchar2(70),
+    login_type char(1), /*s:학생, p:교수, e:직원*/
+    status char(1), /* 상태 : n 정상 /  w 탈퇴 */
+    type_id number, /*student_id, prof_id */ 
+    reg_date date default sysdate/*가입일*/
+);
+
+create table staff( /*직원정보테이블*/
+    staff_no number primary key, /*max +1*/
+    staff_name varchar2(30) not null, /*직원이름*/
+    staff_rank varchar2(2) /* 직급 01:사원 : 10:주임 : 20:대리 30:과장 40 : 차장 : 50:부장 : 60: 이사 : 70: 사장 : 80: 회장*/
+);
+
+create table student( /* 학생정보테이블*/
+    student_no number primary key , /* 학생번호 년2-학과번호-0001 */
+    student_name varchar2(30) not null,
+    student_class varchar2(2), /* 학과*/
+    student_year char(1), /* 학년 */
+    student_birth char(8),/*생년월일*/
+    student_phone char(13)
+     /*신입 / 재등록*/
+);
+
+create table professor(/*교수정보 테이블*/
+    professor_no number primary key,  /*교수코드 max +1*/
+    professor_name varchar2(40) not null, /*교수명*/
+    professor_birth char(8), /*생일*/
+    professor_history long /* 연혁*/
+);
+
+create table curriculum(
+    curriculum_no number primary key, /*교육과정코드*/
+    professor_no number not null,  /*교수코드*/
+    subject_no number not null, /*과목코드*/
+    CONSTRAINT fk_professor_no FOREIGN KEY (professor_no) REFERENCES professor (professor_no),
+    CONSTRAINT fk_subject_no FOREIGN KEY (subject_no) REFERENCES subject (subject_no)
+);
+
+create table reservation_room( /*일별 일정*/
+    reserv_no number primary key, /*max +1*/ 
+    class_week varchar2(2), /*사용요일 - 요일 시간 교실을 바꿀수있음...*/
+    class_start char(4),   /*시작시간*/
+    class_end char(4), /*종료시간*/
+    classroom_no number(10), /*교실코드*/
+    curriculum_no number(10), /*교육과정코드*/
+    CONSTRAINT fk_curriculum_no FOREIGN KEY (curriculum_no) REFERENCES curriculum (curriculum_no),
+    CONSTRAINT fk_classroom_no FOREIGN KEY (classroom_no) REFERENCES classroom (classroom_no),
+    constraint uq_class unique (class_week, class_start, classroom_no)
+);
+
+create table apply_subject( /*신청과목*/
+    apply_no number primary key, /*신청과목코드 max +1*/
+    student_no number not null, /*학생코드*/
+    curriculum_no number not null, /*교과코드*/
+    ret_date date default sysdate,/*신청일*/
+    CONSTRAINT fk_apply_student_no FOREIGN KEY (student_no) REFERENCES student (student_no),
+    CONSTRAINT fk_apply_curriculum_no FOREIGN KEY (curriculum_no) REFERENCES curriculum (curriculum_no),
+    constraint uq_student_curri unique (student_no, curriculum_no)
+);
+
+create table score( /*점수 테이블*/
+    score_no number primary key,/*max +1*/
+    score_type char (1), /* a 출석, p 과제, e 시험*/
+    score number not null,
+    reg_date date not null,
+    apply_no number not null,
+    CONSTRAINT fk_apply_no FOREIGN KEY (apply_no) REFERENCES apply_subject (apply_no)
+);
+
+create table subject( /*과목*/
+    subject_no number primary key, /*과목코드 max +1*/
+    subject_name varchar2(50) not null /*과목명*/
+);
+
+create table classroom( /*교실*/
+    classroom_no number primary key, /*교실코드 max +1*/
+    classroom_name varchar2(10),/*교실명*/
+    classroom_personnel number(3) /*교실정원수*/
+);
+
+

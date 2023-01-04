@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import DAO.MainDAO;
 import DTO.Login;
+import DTO.Professor;
 import DTO.Student;
 
 @WebServlet("/")
@@ -112,51 +113,69 @@ public class MainController extends HttpServlet {
 				
 				case "/student":
 				case "/student_list":
-					site = studentList(request, response);break;
+					site = studentList(request, response);
+					break;
 				case "/student_add":
-					site = "student_add.jsp";break;
+					site = "student_add.jsp";
+					break;
 				case "/student_insert":
-					site = "dashboard.jsp";break;
+					site = studentInsert(request, response);
+					break;
 					
 					
 				case "/professor_list":
-					site = "professor_list.jsp";break;
+					site = "professor_list.jsp";
+					break;
 				case "/professor_add":
-					site = "professor_add.jsp";break;
+					site = "professor_add.jsp";
+					break;
 				case "/professor_insert":
-					site = "dashboard.jsp";break;
+					site = "dashboard.jsp";
+					break;
 					
 					
 				case "/staff_list":
-					site = "staff_list.jsp";break;
+					site = "staff_list.jsp";
+					break;
 				case "/staff_add":
-					site = "staff_add.jsp";break;
+					site = "staff_add.jsp";
+					break;
 				case "/staff_insert":
-					site = "dashboard.jsp";break;
+					site = "dashboard.jsp";
+					break;
 					
 					
 				case "/subject_list":
-					site = "subject_list.jsp";break;
+					site = "subject_list.jsp";
+					break;
 				case "/subject_add":
-					site = "subject_add.jsp";break;
+					site = "subject_add.jsp";
+					break;
 				case "/subject_insert":
-					site = "dashboard.jsp";break;
+					site = "dashboard.jsp";
+					break;
 					
 				
 				case "/classroom_list":
-					site = "classroom_list.jsp";break;
+					site = "classroom_list.jsp";
+					break;
 				case "/classroom_add":
-					site = "classroom_add.jsp";break;
+					site = "classroom_add.jsp";
+					break;
 				case "/classroom_insert":
-					site = "dashboard.jsp";break;
+					site = "dashboard.jsp";
+					break;
 					
 					
 				case "/curriculum_list":
-					site = "curriculum_list.jsp";break;
+					site = "curriculum_list.jsp";
+					break;
 				case "/curriculum_add":
-					site = "curriculum_add.jsp";break;
+					site = "curriculum_add.jsp";
+					break;
 				case "/curriculum_insert":
-					site = "dashboard.jsp";break;
+					site = "dashboard.jsp";
+					break;
 					
 					
 				case "/logout_check":
@@ -192,6 +211,8 @@ public class MainController extends HttpServlet {
 		return "redirect:/dashboard";
 	}
 
+	
+	//학생 목록
 	public String studentList(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ArrayList<Student> list = main.studentList();
@@ -203,6 +224,7 @@ public class MainController extends HttpServlet {
 		return "student_list.jsp";
 	}
 	
+	//학생 등록
 	public String studentInsert(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
@@ -230,4 +252,43 @@ public class MainController extends HttpServlet {
 		return "student_list.jsp";
 	}
 
+	
+	//교수목록
+	public String professorList(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			ArrayList<Professor> list = main.professorList();
+			request.setAttribute("professor_list", list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "student_list.jsp";
+	}
+	
+	public String professorInsert(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Login l = new Login();
+			l.setId(request.getParameter("id"));
+			l.setPw(request.getParameter("pw"));
+			
+			Student s = new Student();
+//		    SimpleDateFormat format = new SimpleDateFormat("yyMM");
+//		    Date current =new Date();
+//		    System.out.println(format.format(current));
+//			s.setStudentNo();
+			s.setStudentName(request.getParameter("student_name"));
+			s.setStudentClass(request.getParameter("student_class"));
+			s.setStudentYear(request.getParameter("student_year"));
+			s.setStudentBirth(request.getParameter("student_birth"));
+			s.setStudentPhone(request.getParameter("student_phone"));
+			main.studentInsert(s, l);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ctx.log("학생 등록 오류");
+			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
+		}
+		return "student_list.jsp";
+	}
 }

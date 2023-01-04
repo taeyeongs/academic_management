@@ -4,7 +4,20 @@
 
 a {text-decoration:none; color:#000;}
 ul{list-style: none;color:#000;}
-ul li{list-style-type: none;color:#000;}
-nav { background-color:aqua;overflow: hidden;}
+ul li{list-style-type: none;color:#000; text-align:center;padding: 5px 0;}
+nav { background-color:aqua;overflow: hidden;position:fixed;top:0; width:100%;}
+
+
 nav > ul > li {float:left;}
-nav > ul > li > a {height:50px;line-height:50px; padding:0 10px;}
+nav > ul > li > a {height:40px;line-height:40px; padding:0 40px;}
+
+
+
+section {width:100%;padding:10px;padding-top:60px;}
+section >  div {width:100%;}
+
+section > div > table.addTable {width:600px; margin:0 auto;}
+section > div > table {width:800px; margin:0 auto;}
+
+
+td{padding:5px 5px;}
