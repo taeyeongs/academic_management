@@ -27,12 +27,12 @@
 				<th>수강</th>
 			</tr>
 			<% for(Student s : list) { %>
-			<tr>
-				<th>학번</th>
-				<th>이름</th>
-				<th>학과</th>
-				<th>학년</th>
-				<th>수강</th>
+			<tr onclick="location.href='./student_detail?studentNo=<%=s.getStudentNo()%>'" onMouseOver="this.style.cursor='hand'">
+				<th><%=s.getStudentNo() %></th>
+				<th><%=s.getStudentName() %></th>
+				<th><%=s.getStudentClass() %></th>
+				<th><%=s.getStudentYear() %></th>
+				<th></th>
 			</tr>
 			<% } %>
 		</table>

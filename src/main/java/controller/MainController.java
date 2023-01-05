@@ -17,7 +17,9 @@ import javax.servlet.http.HttpSession;
 import DAO.MainDAO;
 import DTO.Login;
 import DTO.Professor;
+import DTO.Staff;
 import DTO.Student;
+import DTO.Subject;
 
 @WebServlet("/")
 public class MainController extends HttpServlet {
@@ -121,6 +123,9 @@ public class MainController extends HttpServlet {
 				case "/student_insert":
 					site = studentInsert(request, response);
 					break;
+				case "/student_detail":
+					site = studentDetail(request, response);
+					break;
 					
 					
 				case "/professor_list":
@@ -146,13 +151,13 @@ public class MainController extends HttpServlet {
 					
 					
 				case "/subject_list":
-					site = "subject_list.jsp";
+					site = subjectList(request, response);
 					break;
 				case "/subject_add":
 					site = "subject_add.jsp";
 					break;
 				case "/subject_insert":
-					site = "dashboard.jsp";
+					site = subjectInsert(request, response);
 					break;
 					
 				
@@ -216,12 +221,28 @@ public class MainController extends HttpServlet {
 	public String studentList(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ArrayList<Student> list = main.studentList();
+			System.out.println(list.toString());
+			for(Student c : list) {
+				System.out.println(c.getStudentNo() +":"+c.getStudentName());
+			}
 			request.setAttribute("student_list", list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "student_list.jsp";
+	}
+	
+	//학생 상세
+	public String studentDetail(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Student student = main.studentDetail(Integer.parseInt(request.getParameter("studentNo")));
+			request.setAttribute("student",student);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "student_detail.jsp";
 	}
 	
 	//학생 등록
@@ -249,11 +270,11 @@ public class MainController extends HttpServlet {
 			ctx.log("학생 등록 오류");
 			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
 		}
-		return "student_list.jsp";
+		return "redirect:/student_list";
 	}
 
 	
-	//교수목록
+	//교수 목록
 	public String professorList(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ArrayList<Professor> list = main.professorList();
@@ -265,6 +286,7 @@ public class MainController extends HttpServlet {
 		return "student_list.jsp";
 	}
 	
+	//교수 등록
 	public String professorInsert(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
@@ -283,12 +305,118 @@ public class MainController extends HttpServlet {
 			s.setStudentBirth(request.getParameter("student_birth"));
 			s.setStudentPhone(request.getParameter("student_phone"));
 			main.studentInsert(s, l);
+			return "redirect:/student_list";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ctx.log("학생 등록 오류");
+			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
+			return "student_add";
+		}
+	}
+	
+	
+	////////--------------------------------------------------------------------
+	
+	
+	//직원목록
+	public String staffList(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			ArrayList<Staff> list = main.staffList();
+			System.out.println(list.toString());
+			for(Staff s : list) {
+				System.out.println(s.getStaffNo() +":"+s.getStaffName());
+			}
+			request.setAttribute("student_list", list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "student_list.jsp";
+	}
+	//직원상세
+	public String staff(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Staff student = main.staffDetail(Integer.parseInt(request.getParameter("studentNo")));
+			request.setAttribute("student",student);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "student_detail.jsp";
+	}
+	//직원등록
+	public String staffInsert(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Login l = new Login();
+			l.setId(request.getParameter("id"));
+			l.setPw(request.getParameter("pw"));
+			
+			Staff s = new Staff();
+//		    SimpleDateFormat format = new SimpleDateFormat("yyMM");
+//		    Date current =new Date();
+//		    System.out.println(format.format(current));
+//			s.setStudentNo();
+			s.setStaffName(request.getParameter("staff_name"));
+			s.setStaffRank(request.getParameter("staff_rank"));
+			main.staffInsert(s, l);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			ctx.log("학생 등록 오류");
 			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
 		}
-		return "student_list.jsp";
+		return "redirect:/student_list";
 	}
+	
+	
+	
+////////--------------------------------------------------------------------
+	
+	
+	
+	//교육목록
+	//교육상세
+	//교육등록
+	
+	
+	
+////////--------------------------------------------------------------------
+	
+	
+	
+	//과목목록
+	public String subjectList(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<Subject> list = main.subjectList(request, response); 
+		request.setAttribute("subject_list", list);
+		return "subject_list";
+	}
+	//과목상세
+	//과목등록
+	public String subjectInsert(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Subject s = new Subject();
+			s.setSubjectName(request.getParameter("subject_name"));
+			main.subjectInsert(s);
+		
+			return"redirect:/subject_list";
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getStackTrace();
+			ctx.log("과목등록오류");
+			request.setAttribute("error", "과목등록이 정상적으로 저장되지않았습니다.");
+			return"redirect:/subject_add";
+		}
+	}
+	
+	
+////////--------------------------------------------------------------------
+	
+	
+	
+	//강의실목록
+	//강의실상세
+	//강의실등록
 }

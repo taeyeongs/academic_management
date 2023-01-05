@@ -11,12 +11,16 @@
 <body>
 <%@include file="./top.jsp" %>
 <section>
-<form name="staff" action="staff_insert">
-<input name="id">
-<input type="password" name="pw">
-<input name="staff_name">
-<input name="staff_rank">
+<div>
+<form name="staff" action="staff_insert" method="post">
+<table class="addTable">
+<tr><th></th><td><input name="id"></td></tr>
+<tr><th></th><td><input type="password" name="pw"></td></tr>
+<tr><th></th><td><input name="staff_name"></td></tr>
+<tr><th></th><td><input name="staff_rank"></td></tr>
+</table>
 </form>
+</div>
 </section>
 <%@include file="./footer.jsp" %>
 </body>

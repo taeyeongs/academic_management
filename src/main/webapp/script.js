@@ -75,3 +75,17 @@ function student_form() {
 	student.student_phone.value= student.student_phone.value.trim();
 	student.submit();
 }
+
+
+function subject_form() {
+	let subject = document.subject;
+	
+	if (subject.subject_name.value.trim() == "") {
+		alert("과목명을 입력해주세요");
+		subject.subject_name.focse();
+		return false;
+	}
+	
+	subject.subject_name.value= subject.subject_name.value.trim();
+	subject.submit();
+}
