@@ -8,12 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 //import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 //import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import DTO.Classroom;
 import DTO.Login;
 import DTO.Professor;
 import DTO.Staff;
@@ -194,7 +196,7 @@ public class MainDAO {
 			rs.next();
 			int studentNo = rs.getInt(1);
 			
-			String sql = "INSERT INTO student values(?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO student VALUES(?, ?, ?, ?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, studentNo);
 			ps.setString(2, s.getStudentName());
@@ -251,12 +253,12 @@ public class MainDAO {
 	
 			int log_rs = this.loginExec(conn, l, "p");
 			
-			ps = conn.prepareStatement("select max(professor_no)  + 1 from professor");
+			ps = conn.prepareStatement("SELECT NVL(MAX(professor_no),0) + 1 FROM professor");
 			rs = ps.executeQuery();
 			rs.next();
 			int professorNo = rs.getInt(1);
 			
-			String sql = "INSERT INTO professor(professor_no, professor_name, professor_birth, professor_history) values(?, ?, ?, ?)";
+			String sql = "INSERT INTO professor(professor_no, professor_name, professor_birth, professor_history) VALUES(?, ?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, professorNo);
 			ps.setString(2, s.getProfessorName());
@@ -351,7 +353,7 @@ public class MainDAO {
 			rs.next();
 			int staffNo = rs.getInt(1);
 			
-			String sql = "INSERT INTO staff values(?, ?, ?)";
+			String sql = "INSERT INTO staff VALUES(?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, staffNo);
 			ps.setString(2, s.getStaffName());
@@ -395,21 +397,19 @@ public ArrayList<Subject> subjectList(HttpServletRequest request, HttpServletRes
 	ArrayList<Subject> list = new ArrayList<>();
 	try {
 		conn = open();
-		String sql = "SELECT * FROM subject";
+		String sql = "SELECT subject_no, subject_name, subject_state FROM subject";
 		ps = conn.prepareStatement(sql);
 		rs = ps.executeQuery();
 		while(rs.next()) {
 			Subject s = new Subject();
 			s.setSubjectNo(rs.getInt(1));
 			s.setSubjectName(rs.getString(2));
+			s.setSubjectState(rs.getString(3));
 			list.add(s);
 		}
 		conn.close();
 		ps.close();
-		rs.close();
-
-		
-		
+		rs.close();		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -420,15 +420,72 @@ public ArrayList<Subject> subjectList(HttpServletRequest request, HttpServletRes
 			e1.printStackTrace();
 		}
 	}
-	
+	for(Subject s : list) {
+		System.out.println("subjectList: " + s.getSubjectNo() + ":" + s.getSubjectName() + ":" + s.getSubjectState()); 
+		
+	}
 	return list;
 }
 //과목상세
+public Subject subjectDetail(int subjectNo) {
+	Subject subject = new Subject();
+	try {
+		conn = open();
+		String sql = "SELECT subject_no, subject_name, subject_state FROM subject WHERE subject_no = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, subjectNo);
+		rs = ps.executeQuery();
+		rs.next();
+		subject.setSubjectNo(rs.getInt(1));
+		subject.setSubjectName(rs.getString(2));
+		subject.setSubjectState(rs.getString(3));
+		
+		System.out.println("dao subjectDetail :" + rs.getInt(1) +":"+rs.getString(2)+":"+rs.getString(3));
+		conn.close();
+		ps.close();
+		rs.close();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return subject;
+}
+//과목 수정
+public void subjectUpdate(Subject s) {
+	try {
+		conn = open();
+		String sql = "UPDATE subject SET subject_name= ?, subject_state=? WHERE subject_no = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, s.getSubjectName());
+		ps.setString(2, s.getSubjectState());
+		ps.setInt(3, s.getSubjectNo());
+		ps.executeUpdate();
+		
+		conn.close();
+		ps.close();
+		
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 //과목등록
 public void subjectInsert(Subject s) {
 	try {
 		conn = open();
-		String sql = "insert into subject values(?, ?)";
+		ps = conn.prepareStatement("SELECT NVL(MAX(subject_no),0) + 1 FROM subject");
+		rs = ps.executeQuery();
+		rs.next();
+		int subjectNo = rs.getInt(1);
+		String sql = "INSERT INTO subject(subject_no, subject_name) VALUES(?, ?)";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, subjectNo);
+		ps.setString(2, s.getSubjectName());
+		ps.executeUpdate();
+		
+		conn.close();
+		ps.close();
 		
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
@@ -443,7 +500,105 @@ public void subjectInsert(Subject s) {
 
 
 //강의실목록
+public ArrayList<Classroom> classroomList(HttpServletRequest request, HttpServletResponse response) {
+	ArrayList<Classroom> list = new ArrayList<>();
+	try {
+		conn = open();
+		String sql = "SELECT classroom_no, classroom_name, classroom_personnel FROM classroom";
+		ps = conn.prepareStatement(sql);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			Classroom s = new Classroom();
+			s.setClassroomNo(rs.getInt(1));
+			s.setClassroomName(rs.getString(2));
+			s.setClassroomPersonnel(rs.getInt(3));
+			System.out.println("classroomList: " + rs.getInt(1) + ":" + rs.getString(2) + ":" + rs.getInt(3));
+			list.add(s);
+		}
+		conn.close();
+		ps.close();
+		rs.close();		
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		try {
+			conn.rollback();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	for(Classroom s : list) {
+		System.out.println("classroomList: " + s.getClassroomNo() + ":" + s.getClassroomName() + ":" + s.getClassroomPersonnel()); 
+		
+	}
+	return list;
+}
 //강의실상세
+public Classroom classroomDetail(int classroomNo) {
+	Classroom classroom = new Classroom();
+	try {
+		conn = open();
+		String sql = "SELECT classroom_no, classroom_name, classroom_personnel FROM classroom WHERE classroom_no = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, classroomNo);
+		rs = ps.executeQuery();
+		rs.next();
+		classroom.setClassroomNo(rs.getInt(1));
+		classroom.setClassroomName(rs.getString(2));
+		classroom.setClassroomPersonnel(rs.getInt(3));
+		
+		System.out.println("dao subjectDetail :" + rs.getInt(1) +":"+rs.getString(2)+":"+rs.getString(3));
+		conn.close();
+		ps.close();
+		rs.close();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return classroom;
+}
+//강의실 수정
+public void classroomUpdate(Classroom c) {
+	try {
+		conn = open();
+		String sql = "UPDATE classroom SET classroom_name = ?, classroom_personnel = ? WHERE classroom_no = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, c.getClassroomName());
+		ps.setInt(2, c.getClassroomPersonnel());
+		ps.setInt(3, c.getClassroomNo());
+		ps.executeUpdate();
+		
+		conn.close();
+		ps.close();
+		
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 //강의실등록
-
+public void classroomInsert(Classroom c) {
+	try {
+		conn = open();
+		ps = conn.prepareStatement("SELECT NVL(MAX(classroom_no),0) + 1 FROM classroom");
+		rs = ps.executeQuery();
+		rs.next();
+		int classroomNo = rs.getInt(1);
+		String sql = "INSERT INTO classroom(classroom_no, classroom_name, classroom_personnel) VALUES(?, ?)";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, classroomNo);
+		ps.setString(2, c.getClassroomName());
+		ps.setInt(3, c.getClassroomPersonnel());
+		ps.executeUpdate();
+		
+		conn.close();
+		ps.close();
+		
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
 }

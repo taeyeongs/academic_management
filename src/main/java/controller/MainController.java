@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import DAO.MainDAO;
+import DTO.Classroom;
 import DTO.Login;
 import DTO.Professor;
 import DTO.Staff;
@@ -68,7 +69,7 @@ public class MainController extends HttpServlet {
 	    session.setMaxInactiveInterval(sTime);
 
 	    // 무한대설정
-	    session.setMaxInactiveInterval(-1);
+//	    session.setMaxInactiveInterval(-1);
 
 	    // 세션Id 값 가져오기
 	    String sId = session.getId();
@@ -103,6 +104,7 @@ public class MainController extends HttpServlet {
 				site = "redirect:/index";
 				break;	
 		}
+	    
 	    if(login != null) {
 	    	System.out.println("controller : / - session");
 			switch(command) {
@@ -129,24 +131,24 @@ public class MainController extends HttpServlet {
 					
 					
 				case "/professor_list":
-					site = "professor_list.jsp";
+					site = professorList(request, response);
 					break;
 				case "/professor_add":
 					site = "professor_add.jsp";
 					break;
 				case "/professor_insert":
-					site = "dashboard.jsp";
+					site = professorInsert(request, response);
 					break;
 					
 					
 				case "/staff_list":
-					site = "staff_list.jsp";
+					site = staffList(request, response);
 					break;
 				case "/staff_add":
 					site = "staff_add.jsp";
 					break;
 				case "/staff_insert":
-					site = "dashboard.jsp";
+					site = staffInsert(request, response);
 					break;
 					
 					
@@ -159,16 +161,29 @@ public class MainController extends HttpServlet {
 				case "/subject_insert":
 					site = subjectInsert(request, response);
 					break;
+				case "/subject_detail":
+					site = subjectDetail(request, response);
+					break;
+				case "/subject_update":
+					site = subjectUpdate(request, response);
+					break;
 					
-				
+					
+					
 				case "/classroom_list":
-					site = "classroom_list.jsp";
+					site = classroomList(request, response);
 					break;
 				case "/classroom_add":
 					site = "classroom_add.jsp";
 					break;
 				case "/classroom_insert":
-					site = "dashboard.jsp";
+					site = classroomInsert(request, response);
+					break;
+				case "/classroom_detail":
+					site = classroomDetail(request, response);
+					break;
+				case "/classroom_update":
+					site = classroomUpdate(request, response);
 					break;
 					
 					
@@ -294,17 +309,15 @@ public class MainController extends HttpServlet {
 			l.setId(request.getParameter("id"));
 			l.setPw(request.getParameter("pw"));
 			
-			Student s = new Student();
+			Professor p = new Professor();
 //		    SimpleDateFormat format = new SimpleDateFormat("yyMM");
 //		    Date current =new Date();
 //		    System.out.println(format.format(current));
 //			s.setStudentNo();
-			s.setStudentName(request.getParameter("student_name"));
-			s.setStudentClass(request.getParameter("student_class"));
-			s.setStudentYear(request.getParameter("student_year"));
-			s.setStudentBirth(request.getParameter("student_birth"));
-			s.setStudentPhone(request.getParameter("student_phone"));
-			main.studentInsert(s, l);
+			p.setProfessorName(request.getParameter("professor_name"));
+			p.setProfessorBirth(request.getParameter("professor_birth"));
+			p.setProfessorHistory(request.getParameter("professor_history"));
+			main.professorInsert(p, l);
 			return "redirect:/student_list";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -390,25 +403,55 @@ public class MainController extends HttpServlet {
 	public String subjectList(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<Subject> list = main.subjectList(request, response); 
 		request.setAttribute("subject_list", list);
-		return "subject_list";
+		return "subject_list.jsp";
 	}
 	//과목상세
+	
+	public String subjectDetail(HttpServletRequest request, HttpServletResponse response) {
+		int subjectNo = Integer.parseInt(request.getParameter("subjectNo"));
+		Subject subject = main.subjectDetail(subjectNo); 
+		request.setAttribute("subject", subject);
+		return "subject_modify.jsp";
+	}
+	
+	//과목 수정
+	
+	public String subjectUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Subject s = new Subject();
+			s.setSubjectNo(Integer.parseInt(request.getParameter("subject_no")));
+			s.setSubjectName(request.getParameter("subject_name"));
+			s.setSubjectState(request.getParameter("subject_state"));
+			
+			System.out.println("controller_subjectUpdate");
+			main.subjectUpdate(s);	
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getStackTrace();
+			ctx.log("과목등록오류");
+			request.setAttribute("error", "과목등록이 정상적으로 저장되지않았습니다.");
+//			return"redirect:/subject_add";
+		}
+		return "redirect:/subject_list";
+	}
 	//과목등록
 	public String subjectInsert(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
 			Subject s = new Subject();
 			s.setSubjectName(request.getParameter("subject_name"));
-			main.subjectInsert(s);
-		
-			return"redirect:/subject_list";
+			
+			System.out.println("controller_subjectInsert");
+			main.subjectInsert(s);	
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.getStackTrace();
 			ctx.log("과목등록오류");
 			request.setAttribute("error", "과목등록이 정상적으로 저장되지않았습니다.");
-			return"redirect:/subject_add";
+//			return"redirect:/subject_add";
 		}
+		return "redirect:/subject_list";
 	}
 	
 	
@@ -417,6 +460,55 @@ public class MainController extends HttpServlet {
 	
 	
 	//강의실목록
+	public String classroomList(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<Classroom> list = main.classroomList(request, response); 
+		request.setAttribute("classroom_list", list);
+		return "classroom_list.jsp";
+	}
 	//강의실상세
+	public String classroomDetail(HttpServletRequest request, HttpServletResponse response) {
+		int subjectNo = Integer.parseInt(request.getParameter("subjectNo"));
+		Classroom classroom = main.classroomDetail(subjectNo); 
+		request.setAttribute("classroom", classroom);
+		return "classroom_modify.jsp";
+	}
+	//강의실수정
+	public String classroomUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Classroom c = new Classroom();
+			c.setClassroomNo(Integer.parseInt(request.getParameter("classroom_no")));
+			c.setClassroomName(request.getParameter("classroom_name"));
+			c.setClassroomPersonnel(Integer.parseInt(request.getParameter("classroom_personnel")));
+			
+			System.out.println("controller_classroomUpdate");
+			main.classroomUpdate(c);	
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getStackTrace();
+			ctx.log("강의실수정오류");
+			request.setAttribute("error", "강의실수정이 정상적으로 저장되지않았습니다.");
+//			return"redirect:/subject_add";
+		}
+		return "redirect:/classroom_list";
+	}
 	//강의실등록
+public String classroomInsert(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			Classroom s = new Classroom();
+			s.setClassroomName(request.getParameter("classroom_name"));
+			s.setClassroomPersonnel(Integer.parseInt(request.getParameter("classroom_personnel")));
+			
+			System.out.println("controller_classroomInsert");
+			main.classroomInsert(s);	
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getStackTrace();
+			ctx.log("강의실등록오류");
+			request.setAttribute("error", "강의실등록이 정상적으로 저장되지않았습니다.");
+//			return"redirect:/subject_add";
+		}
+		return "redirect:/classroom_list";
+	}
 }

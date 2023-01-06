@@ -3,7 +3,6 @@
 <%@page import="java.util.*" %>
 <%@page import="DTO.Student" %>
 <%
-ArrayList<Student> list = new ArrayList<>();
 Student s = (Student)request.getAttribute("student");
 %>    
 <!DOCTYPE html>

@@ -4,7 +4,7 @@
 <%@page import="DTO.Subject" %>
 <%
 ArrayList<Subject> list = new ArrayList<>();
-list = (ArrayList<Subject>)request.getAttribute("");
+list = (ArrayList<Subject>)request.getAttribute("subject_list");
 %>
 <!DOCTYPE html>
 <html>
@@ -17,16 +17,14 @@ list = (ArrayList<Subject>)request.getAttribute("");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-<div>
-<form name="subject" action="subject_insert" method="post">
-<table>
-<tr><th>과목</th></tr>
-<% for(Subject s : list) { %>
-<tr><td><%=s.getSubjectName() %></td></tr>
-<% } %>
-</table>
-</form>
-</div>
+	<div>
+		<table border="1">
+		<tr><th>번호</th><th>과목</th><th>상태</th></tr>
+		<% for(Subject s : list) { %>
+		<tr onclick="location.href='subject_detail?subjectNo=<%=s.getSubjectNo()%>'"><th><%=s.getSubjectNo() %></th><td><%=s.getSubjectName()%></td><td><%=s.getSubjectState()%></td></tr>
+		<% } %>
+		</table>
+	</div>
 </section>
 <%@include file="./footer.jsp" %>
 </body>

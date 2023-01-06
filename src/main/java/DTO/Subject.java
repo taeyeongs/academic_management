@@ -1,14 +1,9 @@
 package DTO;
-//과목
-
-//학번
-
 // 과목명
-// 점수
-//
 public class Subject {
 	private int subjectNo;
 	private String subjectName;
+	private String SubjectState;
 	public int getSubjectNo() {
 		return subjectNo;
 	}
@@ -21,5 +16,10 @@ public class Subject {
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
 	}
-	
+	public String getSubjectState() {
+		return SubjectState;
+	}
+	public void setSubjectState(String subjectState) {
+		SubjectState = subjectState;
+	}
 }

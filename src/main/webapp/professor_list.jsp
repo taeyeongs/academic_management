@@ -4,7 +4,7 @@
 <%@page import="DTO.Professor" %>    
 <%
 ArrayList<Professor> list = new ArrayList<>();
-list = (ArrayList<Professor>)request.getAttribute("");
+list = (ArrayList<Professor>)request.getAttribute("professor_list");
 %>    
 <!DOCTYPE html>
 <html>
@@ -17,7 +17,22 @@ list = (ArrayList<Professor>)request.getAttribute("");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-
+	<div>
+		<table border="1">
+			<tr>
+				<th>번호</th>
+				<th>교수명</th>
+				<th>교수생일</th>
+			</tr>
+			<% for(Professor p : list) { %>
+			<tr onclick="location.href='./professor_detail?professorNo=<%=p.getProfessorNo()%>'" onMouseOver="this.style.cursor='hand'">
+				<th><%=p.getProfessorNo() %></th>
+				<th><%=p.getProfessorName() %></th>
+				<th><%=p.getProfessorBirth() %></th>
+			</tr>
+			<% } %>
+		</table>
+	</div>
 </section>
 <%@include file="./footer.jsp" %>
 </body>

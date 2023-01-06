@@ -76,7 +76,8 @@ create table score( /*점수 테이블*/
 
 create table subject( /*과목*/
     subject_no number primary key, /*과목코드 max +1*/
-    subject_name varchar2(50) not null /*과목명*/
+    subject_name varchar2(50) not null, /*과목명*/
+    subject_state char(1) DEFAULT 'Y' not null /*상태 Y사용 N미사용*/
 );
 
 create table classroom( /*교실*/

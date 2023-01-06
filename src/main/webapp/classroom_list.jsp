@@ -4,7 +4,7 @@
 <%@page import="DTO.Classroom" %>    
 <%
 ArrayList<Classroom> list = new ArrayList<>();
-list = (ArrayList<Classroom>)request.getAttribute("");
+list = (ArrayList<Classroom>)request.getAttribute("classroom_list");
 %>       
 <!DOCTYPE html>
 <html>
@@ -15,6 +15,17 @@ list = (ArrayList<Classroom>)request.getAttribute("");
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
-
+<%@include file="./top.jsp" %>
+<section>
+	<div>
+		<table border="1">
+		<tr><th>강의실번호</th><th>강의실명</th><th>강의실정원</th></tr>
+		<% for(Classroom c : list) { %>
+		<tr onclick="location.href='classroom_detail?classroomNo=<%=c.getClassroomNo()%>'"><th><%=c.getClassroomNo()%></th><td><%=c.getClassroomName()%></td><td><%=c.getClassroomPersonnel()%></td></tr>
+		<% } %>
+		</table>
+	</div>
+</section>
+<%@include file="./footer.jsp" %>
 </body>
 </html>

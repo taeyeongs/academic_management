@@ -29,5 +29,5 @@ public class Professor {
 	}
 	public void setProfessorHistory(Long professorHistory) {
 		this.professorHistory = professorHistory;
-	}
+	}	
 }

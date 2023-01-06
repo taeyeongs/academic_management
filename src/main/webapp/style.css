@@ -14,7 +14,7 @@ nav > ul > li > a {height:40px;line-height:40px; padding:0 40px;}
 
 
 section {width:100%;padding:10px;padding-top:60px;}
-section >  div {width:100%;}
+section > div {width:100%;}
 
 table.addTable {width:600px; margin:0 auto;}
 section > div > table {width:800px; margin:0 auto;}
