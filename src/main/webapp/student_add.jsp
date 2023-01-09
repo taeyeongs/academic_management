@@ -16,9 +16,10 @@ Student s = (Student)request.getAttribute("student");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>학생 등록</h2></div>
+	<div class="addTable">
 		<form name="student" action="student_insert" method="post">
-		<table border="1" class="addTable">
+		<table border="1">
 			<tr><th>아이디 : </th><td><input name="id"></td><tr>
 			<tr><th>비번 : </th><td><input type="password" name="pw"></td><tr>
 			<tr><th>학생 이름 : </th><td><input name="student_name"></td><tr>
@@ -36,7 +37,7 @@ Student s = (Student)request.getAttribute("student");
 			<tr><th>생년월일 : </th><td><input name="student_birth" placeholder="19900101" maxlength="8"></td><tr> 
 			<tr><th>전화번호 : </th><td><input name="student_phone" placeholder="010-1111-1111" maxlength="13"></td><tr>
 		</table>
-		<div style="text-align:center; padding-top:20px;">
+		<div class="a_button_area">
 			<div><a class="a_button" onclick="location.href='student_list'">목록</a></div>
 			<div><a class="a_button" onclick="student_form()">등록</a></div>
 		</div>

@@ -17,7 +17,8 @@ list = (ArrayList<Professor>)request.getAttribute("professor_list");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>교수 목록</h2></div>
+	<div class="listTable">
 		<table border="1">
 			<tr>
 				<th>번호</th>

@@ -14,11 +14,12 @@ nav > ul > li > a {height:40px;line-height:40px; padding:0 40px;}
 
 
 section {width:100%;padding:10px;padding-top:60px;}
-section > div {width:100%;}
-
-table.addTable {width:600px; margin:0 auto;}
-section > div > table {width:800px; margin:0 auto;}
+.title {text-align:center;padding:10px;}
+.addTable {width:600px; margin:0 auto;}
+.listTable {width:800px;margin:0 auto;}
+table {width:100%;}
 
 
 td{padding:5px 5px;}
+.a_button_area {display:flex;justify-content:space-between; width:600px; padding-top:20px;}
 .a_button{cursor:hand; border:1px solid #000; border-radius: 3px;padding:2px 5px;}

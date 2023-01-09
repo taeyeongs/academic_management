@@ -17,7 +17,8 @@ Student s = (Student)request.getAttribute("student");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>학생 수정</h2></div>
+	<div class="addTable">
 		<form method="post" action="student_update">
 		<table border="1">
 			<tr><th>학생번호</th><td><input type="" value="<%=s.getStudentNo() %>" readonly></td><th>이름</th><td><input type="" value="<%=s.getStudentName() %>"></td></tr>
@@ -26,7 +27,10 @@ Student s = (Student)request.getAttribute("student");
 			<tr><th>수강신청 과목</th><td><input type="" value="<%=s.getStudentClass() %>"></td><th></th><td></td></tr>
 		</table>
 		</form>
-		<div style="text-align:center;padding-top:10px;"><button onclick="location.href='./student_list'">목록</button><button onclick="location.href='./student_modify?studentNo=<%=s.getStudentNo() %>'">수정</button></div>
+		<div class="a_button_area">
+			<div><a class="a_button" onclick="location.href='./student_list'">목록</a></div>
+			<div><a class="a_button" onclick="location.href='./student_modify?studentNo=<%=s.getStudentNo() %>'">수정</a></div>
+		</div>
 	</div>
 </section>
 <%@include file="./footer.jsp" %>

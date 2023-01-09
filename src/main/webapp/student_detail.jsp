@@ -17,6 +17,7 @@ Student s = (Student)request.getAttribute("student");
 <body>
 <%@include file="./top.jsp" %>
 <section>
+	<div class="title"><h2>학생 상세</h2></div>
 	<div>
 		<table border="1">
 			<tr><th>학생번호</th><td><%=s.getStudentNo() %></td><th>이름</th><td><%=s.getStudentName() %></td></tr>
@@ -24,7 +25,11 @@ Student s = (Student)request.getAttribute("student");
 			<tr><th>학과</th><td><%=s.getStudentClass() %></td><th>학년</th><td><%=s.getStudentYear() %></td></tr>
 			<tr><th>수강신청 과목</th><td><%=s.getStudentClass() %></td><th></th><td></td></tr>
 		</table>
-		<div style="text-align:center;padding-top:10px;"><button onclick="location.href='./student_list'">목록</button><button onclick="location.href='./student_modify?studentNo=<%=s.getStudentNo() %>'">수정</button><button onclick="location.href='./student_delete?studentNo=<%=s.getStudentNo() %>'">삭제</button></div>
+		<div class="a_button_area">
+			<div><a class="a_button" onclick="location.href='./student_list'">목록</a></div>
+			<div><a class="a_button" onclick="location.href='./student_modify?studentNo=<%=s.getStudentNo() %>'">수정</a></div>
+			<div><a class="a_button" onclick="location.href='./student_delete?studentNo=<%=s.getStudentNo() %>'">삭제</a></div>
+		</div>
 	</div>
 </section>
 <%@include file="./footer.jsp" %>

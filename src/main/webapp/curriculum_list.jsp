@@ -17,13 +17,21 @@ list = (ArrayList<Curriculum>)request.getAttribute("");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-<form name="professor" action="prof_insert">
-<input name="id">
-<input type="password" name="pw">
-<input name="prof_name">
-<input name="prof_birth">
-<textarea name="prof_history"></textarea>
-</form>
+	<div class="title"><h2>교육 목록</h2></div>
+	<div class="listTable">
+		<table>
+			<tr><th>교육과목</th><th>교수명</th><th>강의실</th></tr>
+			<%for() { %>
+			<tr>
+				<input name="id">
+				<input type="password" name="pw">
+				<input name="prof_name">
+				<input name="prof_birth">
+				<textarea name="prof_history"></textarea>
+			</tr>
+			<% } %>
+		</table>
+	</div>
 </section>
 <%@include file="./footer.jsp" %>
 </body>

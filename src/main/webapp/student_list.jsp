@@ -17,7 +17,8 @@
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>학생 목록</h2></div>
+	<div class="listTable">
 		<table border="1">
 			<tr>
 				<th>학번</th>

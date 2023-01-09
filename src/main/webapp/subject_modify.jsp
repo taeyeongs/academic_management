@@ -16,10 +16,11 @@ Subject subject = (Subject)request.getAttribute("subject");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>과목 수정</h2></div>
+	<div class="addTable">
 		<form name="subject" action="subject_update" method="post">
 		<input type="hidden" name="subject_no" value="<%=subject.getSubjectNo()%>">
-		<table class="addTable" border="1">
+		<table border="1">
 			<tr><th>과목명 : </th><td><input name="subject_name" value="<%=subject.getSubjectName()%>"></td></tr>
 			<tr>
 				<th>과목명 : </th>
@@ -29,9 +30,9 @@ Subject subject = (Subject)request.getAttribute("subject");
 				</td>
 			</tr>
 		</table>
-		<div style="text-align:center; padding-top:20px; width:100%; background-color:#54e847; ">
-			<div style="background-color: #ff5a5a; width:100px;"><a class="a_button" onclick="location.href='subject_list'">목록</a></div>
-			<div style="background-color: #f389ef; width:100px;"><a class="a_button" onclick="subject_form()">수정</a></div>
+		<div class="a_button_area">
+			<div><a class="a_button" onclick="location.href='subject_list'">목록</a></div>
+			<div><a class="a_button" onclick="subject_form()">수정</a></div>
 		</div>
 		</form>
 		

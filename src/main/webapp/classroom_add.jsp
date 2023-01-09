@@ -11,15 +11,16 @@
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>강의실 등록</h2></div>
+	<div class="addTable">
 		<form name="classroom" action="classroom_insert">
-		<table class="addTable" border="1">
-			<tr><th>교실명</th><td><input name="classroom_name"></td></tr>
+		<table border="1">
+			<tr><th>강의실명</th><td><input name="classroom_name"></td></tr>
 			<tr><th>정원수</th><td><input name="classroom_personnel"></td></tr>
 		</table>
-		<div class="button_area" style="text-align:center; padding-top:20px;">
-			<div class="button_area_left"><a class="a_button" onclick="location.href='classroom_list'">목록</a></div>
-			<div class="button_area_right"><a class="a_button" onclick="classroom_form()">등록</a></div>
+		<div class="a_button_area" style="text-align:center; padding-top:20px;">
+			<div><a class="a_button" onclick="location.href='classroom_list'">목록</a></div>
+			<div><a class="a_button" onclick="classroom_form()">등록</a></div>
 		</div>
 		</form>
 	</div>

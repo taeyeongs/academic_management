@@ -20,13 +20,14 @@ if(<%=error%> != null) {
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>과목 등록</h2></div>
+	<div class="addTable">
 		<form name="subject" action="subject_insert" method="post">
-		<table class="addTable">
+		<table border="1">
 			<tr><th>과목명 : </th><td><input name="subject_name"></td></tr>
 		</table>
 		</form>
-		<div style="text-align:center; padding-top:20px;">
+		<div class="a_button_area">
 			<div><a class="a_button" onclick="location.href='subject_list'">목록</a></div>
 			<div><a class="a_button" onclick="subject_form()">등록</a></div>
 		</div>

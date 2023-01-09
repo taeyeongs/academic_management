@@ -17,6 +17,7 @@ list = (ArrayList<Subject>)request.getAttribute("subject_list");
 <body>
 <%@include file="./top.jsp" %>
 <section>
+	<div class="title"><h2>과목 목록</h2></div>
 	<div>
 		<table border="1">
 		<tr><th>번호</th><th>과목</th><th>상태</th></tr>

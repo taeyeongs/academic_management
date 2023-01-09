@@ -32,7 +32,20 @@ create table professor(/*교수정보 테이블*/
     professor_no number primary key,  /*교수코드 max +1*/
     professor_name varchar2(40) not null, /*교수명*/
     professor_birth char(8), /*생일*/
-    professor_history long /* 연혁*/
+    professor_history varchar2(4000), /* 연혁*/
+    subject_no number not null /*과목*/
+);
+
+create table subject( /*과목*/
+    subject_no number primary key, /*과목코드 max +1*/
+    subject_name varchar2(50) not null, /*과목명*/
+    subject_state char(1) DEFAULT 'Y' not null /*상태 Y사용 N미사용*/
+);
+
+create table classroom( /*교실*/
+    classroom_no number primary key, /*교실코드 max +1*/
+    classroom_name varchar2(10),/*교실명*/
+    classroom_personnel number(3) /*교실정원수*/
 );
 
 create table curriculum(
@@ -74,16 +87,8 @@ create table score( /*점수 테이블*/
     CONSTRAINT fk_apply_no FOREIGN KEY (apply_no) REFERENCES apply_subject (apply_no)
 );
 
-create table subject( /*과목*/
-    subject_no number primary key, /*과목코드 max +1*/
-    subject_name varchar2(50) not null, /*과목명*/
-    subject_state char(1) DEFAULT 'Y' not null /*상태 Y사용 N미사용*/
-);
 
-create table classroom( /*교실*/
-    classroom_no number primary key, /*교실코드 max +1*/
-    classroom_name varchar2(10),/*교실명*/
-    classroom_personnel number(3) /*교실정원수*/
-);
+
+
 
 

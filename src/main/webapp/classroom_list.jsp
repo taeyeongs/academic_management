@@ -17,7 +17,8 @@ list = (ArrayList<Classroom>)request.getAttribute("classroom_list");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div>
+	<div class="title"><h2>강의실 목록</h2></div>
+	<div class="listTable">
 		<table border="1">
 		<tr><th>강의실번호</th><th>강의실명</th><th>강의실정원</th></tr>
 		<% for(Classroom c : list) { %>

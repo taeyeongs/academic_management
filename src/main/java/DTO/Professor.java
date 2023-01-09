@@ -5,7 +5,7 @@ public class Professor {
 	int professorNo;
 	String professorName;
 	String professorBirth;
-	Long professorHistory;
+	String professorHistory;
 	public int getProfessorNo() {
 		return professorNo;
 	}
@@ -24,10 +24,10 @@ public class Professor {
 	public void setProfessorBirth(String professorBirth) {
 		this.professorBirth = professorBirth;
 	}
-	public Long getProfessorHistory() {
+	public String getProfessorHistory() {
 		return professorHistory;
 	}
-	public void setProfessorHistory(Long professorHistory) {
+	public void setProfessorHistory(String professorHistory) {
 		this.professorHistory = professorHistory;
 	}	
 }
