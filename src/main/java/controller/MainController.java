@@ -1,9 +1,14 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -14,11 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.filters.SetCharacterEncodingFilter;
+
 import DAO.MainDAO;
 import DTO.Classroom;
 import DTO.Curriculum;
 import DTO.Login;
 import DTO.Professor;
+import DTO.ReservationRoom;
 import DTO.Staff;
 import DTO.Student;
 import DTO.Subject;
@@ -102,7 +110,7 @@ public class MainController extends HttpServlet {
 				break;
 			case "/logout_check":
 				session.invalidate();
-				site = "redirect:/index";
+				site = "redirect:/";
 				break;	
 		}
 	    
@@ -131,17 +139,20 @@ public class MainController extends HttpServlet {
 					break;
 					
 					
+				case "/professor":
 				case "/professor_list":
 					site = professorList(request, response);
 					break;
 				case "/professor_add":
-					site = "professor_add.jsp";
+					site = professorAdd(request, response);
+//					site = "professor_add.jsp";
 					break;
 				case "/professor_insert":
 					site = professorInsert(request, response);
 					break;
 					
 					
+				case "/staff":
 				case "/staff_list":
 					site = staffList(request, response);
 					break;
@@ -153,6 +164,7 @@ public class MainController extends HttpServlet {
 					break;
 					
 					
+				case "/subject":
 				case "/subject_list":
 					site = subjectList(request, response);
 					break;
@@ -170,7 +182,7 @@ public class MainController extends HttpServlet {
 					break;
 					
 					
-					
+				case "/classroom":
 				case "/classroom_list":
 					site = classroomList(request, response);
 					break;
@@ -188,20 +200,24 @@ public class MainController extends HttpServlet {
 					break;
 					
 					
+				case "/curriculum":
 				case "/curriculum_list":
-					site = "curriculum_list.jsp";
+					site = curriculumList(request, response);
+//					site = "curriculum_list.jsp";
 					break;
 				case "/curriculum_add":
-					site = "curriculum_add.jsp";
+					site = curriculumAdd(request, response);
+//					site = "curriculum_add.jsp";
 					break;
 				case "/curriculum_insert":
-					site = "dashboard.jsp";
+					site = curriculumInsert(request, response);
+//					site = "dashboard.jsp";
 					break;
 					
 					
 				case "/logout_check":
 					session.invalidate();
-					site = "redirect:/index";
+					site = "redirect:/";
 					break;
 			}
 	    } else {
@@ -312,6 +328,12 @@ public class MainController extends HttpServlet {
 		return "professor_list.jsp";
 	}
 	
+	//교수등록페이
+	public String professorAdd(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<Subject> subjectList = main.subjectList(); 
+		request.setAttribute("subject_list", subjectList);
+		return "professor_add.jsp";
+	}
 	//교수 등록
 	public String professorInsert(HttpServletRequest request, HttpServletResponse response) {
 		
@@ -328,12 +350,13 @@ public class MainController extends HttpServlet {
 			p.setProfessorName(request.getParameter("professor_name"));
 			p.setProfessorBirth(request.getParameter("professor_birth"));
 			p.setProfessorHistory(request.getParameter("professor_history"));
+			p.setSubjectNo(Integer.parseInt(request.getParameter("subject_no")));
 			main.professorInsert(p, l);
 			return "redirect:/professor_list";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			ctx.log("학생 등록 오류");
+			ctx.log("교수 등록 오류");
 			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
 			return "professor_add";
 		}
@@ -404,12 +427,12 @@ public class MainController extends HttpServlet {
 	
 	//과목목록
 	public String subjectList(HttpServletRequest request, HttpServletResponse response) {
-		ArrayList<Subject> list = main.subjectList(request, response); 
+		ArrayList<Subject> list = main.subjectAllList(request, response); 
 		request.setAttribute("subject_list", list);
 		return "subject_list.jsp";
 	}
-	//과목상세
 	
+	//과목상세
 	public String subjectDetail(HttpServletRequest request, HttpServletResponse response) {
 		int subjectNo = Integer.parseInt(request.getParameter("subjectNo"));
 		Subject subject = main.subjectDetail(subjectNo); 
@@ -418,7 +441,6 @@ public class MainController extends HttpServlet {
 	}
 	
 	//과목 수정
-	
 	public String subjectUpdate(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
@@ -465,17 +487,19 @@ public class MainController extends HttpServlet {
 	
 	//강의실목록
 	public String classroomList(HttpServletRequest request, HttpServletResponse response) {
-		ArrayList<Classroom> list = main.classroomList(request, response); 
+		ArrayList<Classroom> list = main.classroomList(); 
 		request.setAttribute("classroom_list", list);
 		return "classroom_list.jsp";
 	}
+	
 	//강의실상세
 	public String classroomDetail(HttpServletRequest request, HttpServletResponse response) {
-		int subjectNo = Integer.parseInt(request.getParameter("subjectNo"));
+		int subjectNo = Integer.parseInt(request.getParameter("classroomNo"));
 		Classroom classroom = main.classroomDetail(subjectNo); 
 		request.setAttribute("classroom", classroom);
 		return "classroom_modify.jsp";
 	}
+	
 	//강의실수정
 	public String classroomUpdate(HttpServletRequest request, HttpServletResponse response) {
 		
@@ -496,6 +520,7 @@ public class MainController extends HttpServlet {
 		}
 		return "redirect:/classroom_list";
 	}
+	
 	//강의실등록
 	public String classroomInsert(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -529,13 +554,14 @@ public class MainController extends HttpServlet {
 			for(Curriculum c : list) {
 				System.out.println(c.getCurriculumNo() +":"+c.getProfessorNo());
 			}
-			request.setAttribute("student_list", list);
+			request.setAttribute("curriculum_list", list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "student_list.jsp";
+		return "curriculum_list.jsp";
 	}
+	
 	//교육상세
 	public String curriculumDetail(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -548,11 +574,45 @@ public class MainController extends HttpServlet {
 		return "curriculum_detail.jsp";
 	}
 	
-	//교육등록페이
+	//교육등록페이지
 	public String curriculumAdd(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Curriculum curriculum = main.curriculumDetail(Integer.parseInt(request.getParameter("curriculumNo")));
-			request.setAttribute("curriculum",curriculum);
+			
+		    HttpSession session = request.getSession();
+			   // HttpSession session1 = request.getSession(true);
+			   // HttpSession session2 = request.getSession(false);
+			    
+			 // 새로운세션 생성여부
+			boolean sNew = session.isNew();
+			    
+			
+			
+			
+			ArrayList<Professor> professorList = new ArrayList<>();
+			ArrayList<Subject> subjectList = new ArrayList<>();
+			ArrayList<Classroom> classroomList = new ArrayList<>();
+			
+			String loginType = (String)session.getAttribute("login_type");
+			if(loginType.equals("P")) {
+				int loginTypeNo = (Integer)session.getAttribute("login_type_no");
+				Professor loginProfessor = main.professorDetail(loginTypeNo);
+				request.setAttribute("login_professor", loginProfessor);
+			}
+			
+//			System.out.println("controller curriculumAdd - curriculumDetail before  -- curriculumNo:" + Integer.parseInt(request.getParameter("curriculumNo")));
+//			Curriculum curriculum = main.curriculumDetail(Integer.parseInt(request.getParameter("curriculumNo")));
+//			request.setAttribute("curriculum",curriculum);
+			
+			classroomList = main.classroomList();
+			request.setAttribute("classroom_list",classroomList);
+			
+			System.out.println("controller curriculumAdd - professorList before");
+			professorList = main.professorList();
+			request.setAttribute("professor_list", professorList);
+			
+			System.out.println("controller curriculumAdd - subjectList before");
+			subjectList = main.subjectList();
+			request.setAttribute("subject_list", subjectList);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -571,11 +631,86 @@ public class MainController extends HttpServlet {
 		//	s.setStudentNo();
 			s.setProfessorNo(Integer.parseInt(request.getParameter("professor_no")));
 			s.setSubjectNo(Integer.parseInt(request.getParameter("subject_no")));
-			main.curriculumInsert(s);
+			
+			String classStart = request.getParameter("class_start");
+			String classEnd = request.getParameter("class_end");
+			String classStartTime = request.getParameter("class_start_time");
+			String classEndTime = request.getParameter("class_end_time");
+			int classroomNo = Integer.parseInt(request.getParameter("classroom_no"));
+			
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat mdData = new SimpleDateFormat("MM-dd");
+			
+			Date convertedStartDate = df.parse(classStart);
+			Date convertedEndDate = df.parse(classEnd);
+//			ReservationRoom r =  new ReservationRoom();//강의실 사용등록
+			
+			Calendar start = Calendar.getInstance();
+			start.setTime(convertedStartDate);
+			Calendar end = Calendar.getInstance();
+			end.setTime(convertedEndDate);
+			
+			int curriculumNo = (int) main.curriculumInsert(s);
+			System.out.println("curriculumNo : " + curriculumNo);
+			if ( curriculumNo == 0) {
+				PrintWriter out = response.getWriter();
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html; charset=UTF-8");
+				out.print("<script>alert('curriculumNo없음');history.back();</script></body>");
+				out.close();
+				return "";
+			}
+			ArrayList<ReservationRoom> params = new ArrayList<>();
+			for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+				ReservationRoom ss = new ReservationRoom();
+				
+				Calendar dt = Calendar.getInstance();
+				dt.setTime(date);
+				String weekText = dt.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US);
+				String weekTextKR = dt.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.KOREAN);
+				String nationHoliday= mdData.format(date);
+				if (weekText.equals("Saturday") 
+					|| weekText.equals("Sunday") 
+					|| nationHoliday.equals("3-1")
+					|| nationHoliday.equals("7-17") 
+					|| nationHoliday.equals("8-5") 
+					|| nationHoliday.equals("10-3") 
+					|| nationHoliday.equals("10-9")
+					|| nationHoliday.equals("12-25") 
+					) {
+					continue;
+				}
+				
+				ss.setClassDate(df.format(date));
+				ss.setClassWeek(weekTextKR);
+				ss.setClassStartTime(classStartTime);
+				ss.setClassEndTime(classEndTime);
+				ss.setClassroomNo(classroomNo);
+				ss.setCurriculumNo(curriculumNo);
+				ArrayList<ReservationRoom> c = main.ReservationRoomList(ss);
+				
+				System.out.println("date : " + date + ":" + df.format(convertedStartDate) +": weekText = " + weekText);
+				if (!c.isEmpty()) {
+					PrintWriter out = response.getWriter();
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("text/html; charset=UTF-8");
+					out.print("<script>alert('이미시용중인 시간대가 있습니다.');history.back();</script></body>");
+					out.close();
+//					request.setAttribute("error", "이미 사용중입니다.");
+					System.out.println("c != null" + c.toString());
+					return "";
+				}
+				
+				params.add(ss);
+				
+			}
+			
+			main.ReservationRoomInsert(params);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			ctx.log("학생 등록 오류");
+			ctx.log("교육과정 등록 오류");
 			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
 		}
 		return "redirect:/curriculum_list";
@@ -587,6 +722,11 @@ public class MainController extends HttpServlet {
 	
 	
 	
+	private void SetCharacterEncodingFilter(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	//수강신청
 	public String applySubjectList(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<Curriculum> curriculumlist = main.applyCurriculumList(request, response);

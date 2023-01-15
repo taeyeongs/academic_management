@@ -19,6 +19,7 @@ import DTO.Classroom;
 import DTO.Curriculum;
 import DTO.Login;
 import DTO.Professor;
+import DTO.ReservationRoom;
 import DTO.Staff;
 import DTO.Student;
 import DTO.Subject;
@@ -52,25 +53,33 @@ public class MainDAO {
 		
 		System.out.println("pw : " + pw);
 		
-		String sql = "SELECT * FROM login WHERE login_id = ? AND login_pw = ?";
+		String sql = "SELECT login_type, login_type_no FROM login WHERE login_id = ? AND login_pw = ?";
 		ps = conn.prepareStatement(sql);
 		ps.setString(1, id);
 		ps.setString(2, pw);
 		rs = ps.executeQuery();
 		
 //		System.out.println("rs.next()" + rs.next());
-		if (!rs.next()) {
-			System.out.println("rs.next() : false");
-//			return "redirect:/index";
-		} else {
+		if (rs.next()) {
 //			HttpSession session = request.getSession();
 			System.out.println("rs.next() : true");
+			Login login = new Login();
+//			login.setId(rs.getString(1));
+			login.setLoginType(rs.getString(1));
+			login.setLoginTypeNo(rs.getInt(2));
+			
 			session.setAttribute("id", id);
+			session.setAttribute("login_type", rs.getString(1));
+			session.setAttribute("login_type_no", rs.getInt(2));
 			
 			String ids = (String) session.getAttribute("id"); 
 		    System.out.println("ids : " + ids);
 		    
 //			session.invalidate();//세션초기화
+		} else {
+
+			System.out.println("rs.next() : false");
+//			return "redirect:/index";
 
 		}
 	}
@@ -112,7 +121,7 @@ public class MainDAO {
 	public int loginExec( Connection conn, Login l, String t) throws Exception {
 //		conn = open();
 		
-		ps = conn.prepareStatement("INSERT INTO login(login_id, login_pw, login_type, status) VALUES(?, ?, ?, 'n')");
+		ps = conn.prepareStatement("INSERT INTO login(login_id, login_pw, login_type, status) VALUES(?, ?, ?, 'N')");
 		ps.setString(1, l.getId());
 		ps.setString(2, encodeSha256(l.getPw()));
 		ps.setString(3, t);
@@ -185,7 +194,7 @@ public class MainDAO {
 		try {
 			conn = open();
 			conn.setAutoCommit(false);
-			int log_rs = this.loginExec(conn, l, "s");
+			int log_rs = this.loginExec(conn, l, "S");
 //			ps = conn.prepareStatement("insert into login(login_id, login_pw, login_type, status) values(?, ?, ?, 'n')");
 //			ps.setString(1, l.getId());
 //			ps.setString(2, encodeSha256(l.getPw()));
@@ -248,25 +257,56 @@ public class MainDAO {
 		return list;
 	}
 	
+	//직원 상세
+	public Professor professorDetail(int professorNo) throws Exception {
+		conn = open();
+
+//				ArrayList<Student> list = new ArrayList<>();
+		String sql ="SELECT p.professor_no, p.professor_name, p.professor_birth, p.professor_history, p.subject_no, s.subject_name FROM professor p LEFT JOIN subject s ON p.subject_no = s.subject_no WHERE professor_no = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, professorNo);
+		rs = ps.executeQuery();
+		
+		System.out.println("dao professorDetail : ") ;
+
+		rs.next();
+		
+		Professor p = new Professor();
+		p.setProfessorNo(rs.getInt(1));
+		p.setProfessorName(rs.getString(2));
+		p.setProfessorBirth(rs.getString(3));
+		p.setProfessorHistory(rs.getNString(4));
+		p.setSubjectNo(rs.getInt(5));
+		p.setSubjectName(rs.getString(6));
+
+		conn.close();
+		ps.close();
+		rs.close();
+		
+		return p;
+	}
+	
 	
 	//교수 등록
 	public void professorInsert(Professor s, Login l) throws Exception {
 		try {
 			conn = open();
 	
-			int log_rs = this.loginExec(conn, l, "p");
+//			l.setTypeNo(0);
+			int log_rs = this.loginExec(conn, l, "P");
 			
 			ps = conn.prepareStatement("SELECT NVL(MAX(professor_no),0) + 1 FROM professor");
 			rs = ps.executeQuery();
 			rs.next();
 			int professorNo = rs.getInt(1);
 			
-			String sql = "INSERT INTO professor(professor_no, professor_name, professor_birth, professor_history) VALUES(?, ?, ?, ?)";
+			String sql = "INSERT INTO professor(professor_no, professor_name, professor_birth, professor_history, subject_no) VALUES(?, ?, ?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, professorNo);
 			ps.setString(2, s.getProfessorName());
 			ps.setString(3, s.getProfessorBirth());
 			ps.setString(4, s.getProfessorHistory());
+			ps.setInt(5, s.getSubjectNo());
 			int result = ps.executeUpdate();
 			conn.commit();
 		
@@ -387,7 +427,7 @@ public class MainDAO {
 
 
 	//과목목록
-	public ArrayList<Subject> subjectList(HttpServletRequest request, HttpServletResponse response) {
+	public ArrayList<Subject> subjectAllList(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<Subject> list = new ArrayList<>();
 		try {
 			conn = open();
@@ -399,6 +439,45 @@ public class MainDAO {
 				s.setSubjectNo(rs.getInt(1));
 				s.setSubjectName(rs.getString(2));
 				s.setSubjectState(rs.getString(3));
+				System.out.println("subjectAllList : " + rs.getInt(1) +":"+rs.getString(2)+":"+rs.getString(3));
+				list.add(s);
+			}
+			conn.close();
+			ps.close();
+			rs.close();		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		for(Subject s : list) {
+			System.out.println("subjectList: " + s.getSubjectNo() + ":" + s.getSubjectName() + ":" + s.getSubjectState()); 
+			
+		}
+		return list;
+	}
+	
+	//과목목록
+	public ArrayList<Subject> subjectList() {
+		ArrayList<Subject> list = new ArrayList<>();
+		try {
+			conn = open();
+			System.out.println("DAO subjectList");
+			String sql = "SELECT subject_no, subject_name, subject_state FROM subject WHERE subject_state='Y'";
+			ps = conn.prepareStatement(sql);
+			System.out.println("DAO subjectList  query : " + sql);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				Subject s = new Subject();
+				s.setSubjectNo(rs.getInt(1));
+				s.setSubjectName(rs.getString(2));
+				s.setSubjectState(rs.getString(3));
+				System.out.println("subjectList : " + rs.getInt(1) +":"+rs.getString(2)+":"+rs.getString(3));
 				list.add(s);
 			}
 			conn.close();
@@ -497,7 +576,7 @@ public class MainDAO {
 
 	
 	//강의실목록
-	public ArrayList<Classroom> classroomList(HttpServletRequest request, HttpServletResponse response) {
+	public ArrayList<Classroom> classroomList() {
 		ArrayList<Classroom> list = new ArrayList<>();
 		try {
 			conn = open();
@@ -586,7 +665,7 @@ public class MainDAO {
 			rs = ps.executeQuery();
 			rs.next();
 			int classroomNo = rs.getInt(1);
-			String sql = "INSERT INTO classroom(classroom_no, classroom_name, classroom_personnel) VALUES(?, ?)";
+			String sql = "INSERT INTO classroom(classroom_no, classroom_name, classroom_personnel) VALUES(?, ?, ?)";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, classroomNo);
 			ps.setString(2, c.getClassroomName());
@@ -690,27 +769,35 @@ public class MainDAO {
 	}
 	
 	//교육등록
-	public void curriculumInsert(Curriculum s) {
+	public int curriculumInsert(Curriculum s) {
+		int curriculumNo = 0;
 		try {
 			conn = open();
+			conn.setAutoCommit(false);
 			ps = conn.prepareStatement("SELECT NVL(MAX(curriculum_no),0) + 1 FROM curriculum");
 			rs = ps.executeQuery();
 			rs.next();
-			int curriculumNo = rs.getInt(1);
+			curriculumNo = rs.getInt(1);
 			String sql = "INSERT INTO curriculum(curriculum_no, professor_no, subject_no) VALUES(?, ?, ? )";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, curriculumNo);
 			ps.setInt(2, s.getProfessorNo());
-			ps.setInt(2, s.getSubjectNo());
-			ps.executeUpdate();
+			ps.setInt(3, s.getSubjectNo());
+			System.out.println(curriculumNo+":"+s.getProfessorNo()+":"+s.getSubjectNo());
+			int rs = ps.executeUpdate();
 			
+			System.out.println("curriculumInsert : " + rs);
 			conn.close();
 			ps.close();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
+
+			curriculumNo = 0;
 		}
+		return curriculumNo;
 	}
 	
 	
@@ -748,5 +835,96 @@ public class MainDAO {
 		}
 		return list;
 	}
+	
+	//강의실 일정
+	public void ReservationRoomInsert(ArrayList<ReservationRoom> reservationRoom) {
+		try {
+			conn = open();
+			
+			// reservation_no, class_date, class_week, class_start_time, class_end_time, classroom_no, curriculum_no
+			String sql ="insert into reservation_room values(?, ?, ?, ?, ?, ?, ?) ";
+			ps = conn.prepareStatement(sql);
+			
+			for(ReservationRoom datas : reservationRoom) {
+				ps = conn.prepareStatement("SELECT NVL(MAX(reservation_no),0) + 1 FROM reservation_room");
+				rs = ps.executeQuery();
+				rs.next();
+				int reservationNo = rs.getInt(1);
+				ps.setInt(1, reservationNo);
+				ps.setString(2, datas.getClassDate());
+				ps.setString(3, datas.getClassWeek());
+				ps.setString(4, datas.getClassStartTime());
+				ps.setString(5, datas.getClassEndTime());
+				ps.setInt(6, datas.getClassroomNo());
+				ps.setInt(7, datas.getCurriculumNo());
+				System.out.println(reservationNo +":"+datas.getClassDate() +":getClassWeek-"+ datas.getClassWeek() +":getClassStartTime-"+ datas.getClassStartTime() +":getClassEndTime-"+datas.getClassEndTime()+":getClassroomNo-"+datas.getClassroomNo()+":getCurriculumNo - "+datas.getCurriculumNo());
+				ps.addBatch();
+				ps.clearParameters();
+			}
+			
+			try {
+				ps.executeBatch();
+				conn.commit();
+			} catch (SQLException e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				while( e != null) {
+					e.getNextException();
+				}
+				
+				conn.rollback();
+			}
+			
+//			ps.executeUpdate();
+			
+			conn.close();
+			ps.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	public ArrayList<ReservationRoom> ReservationRoomList(ReservationRoom reservationRoom) {
+		ArrayList<ReservationRoom> list = new ArrayList<>();
+		
+		try {
+			conn = open();
+			// reservation_no, class_week, class_start_time, class_end_time, classroom_no, curriculum_no, class_date
+			String sql = "SELECT reservation_no, TO_CHAR(class_date,'YYYY-MM-DD'), class_week, class_start_time, class_end_time, classroom_no, curriculum_no "
+					+ " FROM reservation_room "
+					+ " WHERE classroom_no = ? AND class_date = TO_DATE(?, 'YYYY-MM-DD') "
+					+ " AND class_start_time = ? AND class_end_time = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, reservationRoom.getClassroomNo());
+			ps.setString(2, reservationRoom.getClassDate());
+			ps.setString(3, reservationRoom.getClassStartTime());// 시작시간 
+			ps.setString(4, reservationRoom.getClassEndTime()); // 종료시간 
+			//시작시간이 종료시간 이전 이거나 종료시간 시작시간이 이후거나
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				ReservationRoom res  = new ReservationRoom();
+				res.setReservationNo(rs.getInt(1));
+				res.setClassDate(rs.getString(2));
+				res.setClassWeek(rs.getString(3));
+				res.setClassStartTime(rs.getString(4));
+				res.setClassEndTime(rs.getString(5));
+				res.setClassroomNo(rs.getInt(6));
+				res.setCurriculumNo(rs.getInt(7));
+				
+				System.out.println(rs.getInt(1) +":"+rs.getString(2) +":"+rs.getString(3));
+				list.add(res);
+			}
+			conn.close();
+			ps.close();
+			rs.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 }

@@ -1,17 +1,29 @@
+
+//비밀번호보기모드
+function password_view() {
+	let login = document.login;
+	//console.log("login.password_view.checked", login.password_view_mode.checked);
+	if (login.password_view_mode.checked) {
+		login.pw.setAttribute("type" , "text");
+	} else {
+		login.pw.setAttribute("type", "password");
+	}
+}
+
 //로그인
 function login_form() {
 	let login = document.login;
 	
-	if(login.id.trim() == "") {
+	if(login.id.value.trim() == "") {
 		alert("아이디를 입력해주세요");
-		login.id.focse();
+		login.id.value.focus();
 		return false;
 	}
 	
-	if(login.pw.trim() == "") {
+	if(login.pw.value.trim() == "") {
 		alert("비밀번호를 입력해주세요.");
 		
-		login.pw.focse();
+		login.pw.value.focus();
 		return false;
 	}
 	
@@ -41,31 +53,31 @@ function student_form() {
 	
 	if(student.student_name.value.trim() == "") {
 		alert("학생이름을 입력해주세요.");
-		student.student_name.focse();
+		student.student_name.focus();
 		return false;
 	}
 	
 	if(student.student_class.value.trim() == "") {
 		alert("학과를 입력해주세요.");
-		student.student_class.focse();
+		student.student_class.focus();
 		return false;
 	}
 	
 	if(student.student_year.value.trim() == "") {
 		alert("학년을 입력해주세요.");
-		student.student_year.focse();
+		student.student_year.focus();
 		return false;
 	}
 	
 	if(student.student_birth.value.trim() == "") {
 		alert("생일을 입력해주세요.");
-		student.student_birth.focse();
+		student.student_birth.focus();
 		return false;
 	}
 	
 	if(student.student_phone.value.trim() == "") {
 		alert("전화번호를 입력해주세요.");
-		student.student_phone.focse();
+		student.student_phone.focus();
 		return false;
 	}
 	
@@ -90,25 +102,31 @@ function professor_form() {
 	
 	if(professor.id.value.trim() == "") {
 		alert("아이디를 입력해주세요");
-		professor.id.focse();
+		professor.id.focus();
 		return false;
 	}
 	
 	if(professor.pw.value.trim() == "") {
 		alert("비밀번호를 입력해주세요.");
-		professor.pw.focse();
+		professor.pw.focus();
 		return false;
 	}
 	
 	if(professor.professor_name.value.trim() == "") {
-		alert("학생이름을 입력해주세요.");
-		professor.professor_name.focse();
+		alert("교수명을 입력해주세요.");
+		professor.professor_name.focus();
+		return false;
+	}
+	
+	if(professor.subject_no.value.trim() == "") {
+		alert("과목을 입력해주세요.");
+		professor.subject_no.focus();
 		return false;
 	}
 	
 	if(professor.professor_birth.value.trim() == "") {
-		alert("생일을 입력해주세요.");
-		student.professor_birth.focse();
+		alert("교수생일을 입력해주세요.");
+		student.professor_birth.focus();
 		return false;
 	}
 	
@@ -130,13 +148,13 @@ function staff_form() {
 	
 	if (staff.staff_name.value.trim() == "") {
 		alert("직원명을 입력해주세요");
-		staff.staff_name.focse();
+		staff.staff_name.focus();
 		return false;
 	}
 	
 	if (staff.staff_rank.value.trim() == "") {
 		alert("직급을 입력해주세요");
-		staff.staff_rank.focse();
+		staff.staff_rank.focus();
 		return false;
 	}
 	
@@ -154,13 +172,13 @@ function subject_form() {
 	
 	if (subject.subject_name.value.trim() == "") {
 		alert("과목명을 입력해주세요");
-		subject.subject_name.focse();
+		subject.subject_name.focus();
 		return false;
 	}
 	
 	if (subject.subject_state.value.trim() == "") {
 		alert("과목상태를 입력해주세요");
-		subject.subject_state.focse();
+		subject.subject_state.focus();
 		return false;
 	}
 	
@@ -193,4 +211,24 @@ function classroom_form() {
 	classroom.submit();
 }
 
-
+//교육과정
+function curriculum_form() {
+	let cur = document.curriculum;
+	if (cur.subject_no.value.trim() == "") {
+		alert("과목을 선택해 주세요");
+		return false;
+	}
+	
+	if (cur.professor_no.value.trim() == "") {
+		alert("교수을 선택해 주세요");
+		return false;
+	}
+	
+	if (cur.classroom_no.value.trim() == "") {
+		alert("강의실을 선택해 주세요");
+		cur.classroom_no.focus();
+		return false;
+	}
+	
+	cur.submit();
+}

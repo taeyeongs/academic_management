@@ -4,7 +4,7 @@
 <%@page import="DTO.Curriculum" %>    
 <%
 ArrayList<Curriculum> list = new ArrayList<>();
-list = (ArrayList<Curriculum>)request.getAttribute("");
+list = (ArrayList<Curriculum>)request.getAttribute("curriculum_list");
 %>       
 <!DOCTYPE html>
 <html>
@@ -19,15 +19,13 @@ list = (ArrayList<Curriculum>)request.getAttribute("");
 <section>
 	<div class="title"><h2>교육 목록</h2></div>
 	<div class="listTable">
-		<table>
+		<table border="1">
 			<tr><th>교육과목</th><th>교수명</th><th>강의실</th></tr>
-			<%for() { %>
+			<% for(Curriculum c : list) { %>
 			<tr>
-				<input name="id">
-				<input type="password" name="pw">
-				<input name="prof_name">
-				<input name="prof_birth">
-				<textarea name="prof_history"></textarea>
+				<td><%=c.getSubjectNo() %></td>
+				<td><%=c.getProfessorNo() %></td>
+				<td><%=c.getCurriculumNo() %>
 			</tr>
 			<% } %>
 		</table>

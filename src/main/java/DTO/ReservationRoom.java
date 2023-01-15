@@ -8,17 +8,18 @@ package DTO;
 
 //일별일정 - 교실사용시
 public class ReservationRoom {
-	int reservNo;
-	String classWeek;
-	String classStart;
-	String classEnd;
+	int reservationNo;
+	String classWeek; //요일
+	String classStartTime;
+	String classEndTime;
 	int classroomNo;
 	int curriculumNo;
-	public int getReservNo() {
-		return reservNo;
+	String classDate;
+	public int getReservationNo() {
+		return reservationNo;
 	}
-	public void setReservNo(int reservNo) {
-		this.reservNo = reservNo;
+	public void setReservationNo(int reservationNo) {
+		this.reservationNo = reservationNo;
 	}
 	public String getClassWeek() {
 		return classWeek;
@@ -26,17 +27,17 @@ public class ReservationRoom {
 	public void setClassWeek(String classWeek) {
 		this.classWeek = classWeek;
 	}
-	public String getClassStart() {
-		return classStart;
+	public String getClassStartTime() {
+		return classStartTime;
 	}
-	public void setClassStart(String classStart) {
-		this.classStart = classStart;
+	public void setClassStartTime(String classStartTime) {
+		this.classStartTime = classStartTime;
 	}
-	public String getClassEnd() {
-		return classEnd;
+	public String getClassEndTime() {
+		return classEndTime;
 	}
-	public void setClassEnd(String classEnd) {
-		this.classEnd = classEnd;
+	public void setClassEndTime(String classEndTime) {
+		this.classEndTime = classEndTime;
 	}
 	public int getClassroomNo() {
 		return classroomNo;
@@ -50,5 +51,11 @@ public class ReservationRoom {
 	public void setCurriculumNo(int curriculumNo) {
 		this.curriculumNo = curriculumNo;
 	}
-
+	public String getClassDate() {
+		return classDate;
+	}
+	public void setClassDate(String classDate) {
+		this.classDate = classDate;
+	}
+	
 }

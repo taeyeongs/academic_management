@@ -3,6 +3,8 @@ package DTO;
 public class Login {
 	private String id;
 	private String pw;
+	private String loginType;
+	private int loginTypeNo;
 	public String getId() {
 		return id;
 	}
@@ -14,6 +16,18 @@ public class Login {
 	}
 	public void setPw(String pw) {
 		this.pw = pw;
+	}
+	public String getLoginType() {
+		return loginType;
+	}
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
+	public int getLoginTypeNo() {
+		return loginTypeNo;
+	}
+	public void setLoginTypeNo(int loginTypeNo) {
+		this.loginTypeNo = loginTypeNo;
 	}
 	
 	

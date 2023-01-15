@@ -18,7 +18,7 @@ list = (ArrayList<Subject>)request.getAttribute("subject_list");
 <%@include file="./top.jsp" %>
 <section>
 	<div class="title"><h2>과목 목록</h2></div>
-	<div>
+	<div class="listTable">
 		<table border="1">
 		<tr><th>번호</th><th>과목</th><th>상태</th></tr>
 		<% for(Subject s : list) { %>

@@ -22,9 +22,17 @@ list = (ArrayList<Classroom>)request.getAttribute("classroom_list");
 		<table border="1">
 		<tr><th>강의실번호</th><th>강의실명</th><th>강의실정원</th></tr>
 		<% for(Classroom c : list) { %>
-		<tr onclick="location.href='classroom_detail?classroomNo=<%=c.getClassroomNo()%>'"><th><%=c.getClassroomNo()%></th><td><%=c.getClassroomName()%></td><td><%=c.getClassroomPersonnel()%></td></tr>
+		<tr style="cursor: hand" onclick="location.href='classroom_detail?classroomNo=<%=c.getClassroomNo()%>'">
+			<th><%=c.getClassroomNo()%></th>
+			<td><%=c.getClassroomName()%></td>
+			<td><%=c.getClassroomPersonnel()%></td>
+		</tr>
 		<% } %>
 		</table>
+		<div class="a_button_area">
+			<!-- <div><a class="a_button" onclick="location.href='curriculum_list'">목록</a></div> -->
+			<div><a class="a_button" onclick="location.href='classroom_add'">등록</a></div>
+		</div>
 	</div>
 </section>
 <%@include file="./footer.jsp" %>

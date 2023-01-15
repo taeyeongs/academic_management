@@ -7,8 +7,8 @@ create table login(
     login_id varchar2(100) primary key,
     login_pw varchar2(70),
     login_type char(1), /*s:학생, p:교수, e:직원*/
-    status char(1), /* 상태 : n 정상 /  w 탈퇴 */
-    type_id number, /*student_id, prof_id */ 
+    status char(1), /* 상태 : Y 사용 /  N 미사용 */
+    type_no number, /* student_no, professor_no, staff_no */ 
     reg_date date default sysdate/*가입일*/
 );
 
@@ -57,15 +57,16 @@ create table curriculum(
 );
 
 create table reservation_room( /*일별 일정*/
-    reserv_no number primary key, /*max +1*/ 
-    class_week varchar2(2), /*사용요일 - 요일 시간 교실을 바꿀수있음...*/
-    class_start char(4),   /*시작시간*/
-    class_end char(4), /*종료시간*/
-    classroom_no number(10), /*교실코드*/
-    curriculum_no number(10), /*교육과정코드*/
+    reservation_no number primary key, /*max +1*/ 
+    class_date date not null,
+    class_week char(3), /*사용요일 - 요일 시간 교실을 바꿀수있음...*/
+    class_start_time char(5) not null,   /*시작시간*/
+    class_end_time char(5) not null, /*종료시간*/
+    classroom_no number(10) not null, /*교실코드*/
+    curriculum_no number(10) not null, /*교육과정코드*/
+    
     CONSTRAINT fk_curriculum_no FOREIGN KEY (curriculum_no) REFERENCES curriculum (curriculum_no),
-    CONSTRAINT fk_classroom_no FOREIGN KEY (classroom_no) REFERENCES classroom (classroom_no),
-    constraint uq_class unique (class_week, class_start, classroom_no)
+    CONSTRAINT fk_classroom_no FOREIGN KEY (classroom_no) REFERENCES classroom (classroom_no)
 );
 
 create table apply_subject( /*신청과목*/

@@ -6,6 +6,8 @@ public class Professor {
 	String professorName;
 	String professorBirth;
 	String professorHistory;
+	int subjectNo;
+	String subjectName;
 	public int getProfessorNo() {
 		return professorNo;
 	}
@@ -29,5 +31,18 @@ public class Professor {
 	}
 	public void setProfessorHistory(String professorHistory) {
 		this.professorHistory = professorHistory;
-	}	
+	}
+	public int getSubjectNo() {
+		return subjectNo;
+	}
+	public void setSubjectNo(int subjectNo) {
+		this.subjectNo = subjectNo;
+	}
+	public String getSubjectName() {
+		return subjectName;
+	}
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+	
 }

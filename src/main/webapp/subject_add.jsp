@@ -25,6 +25,7 @@ if(<%=error%> != null) {
 		<form name="subject" action="subject_insert" method="post">
 		<table border="1">
 			<tr><th>과목명 : </th><td><input name="subject_name"></td></tr>
+			<tr><th>과목상태 : </th><td><input type="radio" name="subject_state" value="Y" checked>사용 <input type="radio" name="subject_state" value="N">미사용</td></tr>
 		</table>
 		</form>
 		<div class="a_button_area">
