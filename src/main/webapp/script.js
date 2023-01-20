@@ -93,6 +93,61 @@ function student_form() {
 	student.submit();
 }
 
+function student_update_form() {
+	let student = document.student;
+
+	if(student.pw.value.trim() != "" && student.change_pw.value.trim() == "") {
+		alert("변경할 비밀번호를 입력해주세요.");
+		student.pw.focus();
+		return false;
+	}
+	
+	if(student.change_pw.value.trim() != "" && student.pw.value.trim() == "") {
+		alert("이전 비밀번호를 입력해주세요.");
+		student.pw.focus();
+		return false;
+	}
+	
+	if(student.student_name.value.trim() == "") {
+		alert("학생이름을 입력해주세요.");
+		student.student_name.focus();
+		return false;
+	}
+	
+	if(student.student_class.value.trim() == "") {
+		alert("학과를 입력해주세요.");
+		student.student_class.focus();
+		return false;
+	}
+	
+	if(student.student_year.value.trim() == "") {
+		alert("학년을 입력해주세요.");
+		student.student_year.focus();
+		return false;
+	}
+	
+	if(student.student_birth.value.trim() == "") {
+		alert("생일을 입력해주세요.");
+		student.student_birth.focus();
+		return false;
+	}
+	
+	if(student.student_phone.value.trim() == "") {
+		alert("전화번호를 입력해주세요.");
+		student.student_phone.focus();
+		return false;
+	}
+	
+	student.pw.value= student.pw.value.trim();
+	student.change_pw.value= student.change_pw.value.trim();
+	
+	student.student_name.value= student.student_name.value.trim();
+	student.student_class.value= student.student_class.value.trim();
+	student.student_year.value= student.student_year.value.trim();
+	student.student_birth.value= student.student_birth.value.trim();
+	student.student_phone.value= student.student_phone.value.trim();
+	student.submit();
+}
 
 ///////////////////////////////////////////////////////////////
 
@@ -145,6 +200,18 @@ function professor_form() {
 //직원
 function staff_form() {
 	let staff = document.staff;
+	
+	if(staff.id.value.trim() == "") {
+		alert("아이디를 입력해주세요");
+		staff.id.focus();
+		return false;
+	}
+	
+	if(staff.pw.value.trim() == "") {
+		alert("비밀번호를 입력해주세요.");
+		staff.pw.focus();
+		return false;
+	}
 	
 	if (staff.staff_name.value.trim() == "") {
 		alert("직원명을 입력해주세요");
@@ -231,4 +298,15 @@ function curriculum_form() {
 	}
 	
 	cur.submit();
+}
+
+//수강신청
+function applySubject_form() {
+	let apply = document.applySubject;
+	var chk = document.querySelector("input[name=curriculum_no]").checked;
+	if(chk == false) {
+		alert("신청강의를 선택해주세요");
+		return false;
+	}
+	apply.submit();
 }

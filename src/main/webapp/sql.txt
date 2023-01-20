@@ -8,7 +8,7 @@ create table login(
     login_pw varchar2(70),
     login_type char(1), /*s:학생, p:교수, e:직원*/
     status char(1), /* 상태 : Y 사용 /  N 미사용 */
-    type_no number, /* student_no, professor_no, staff_no */ 
+    login_type_no number, /* student_no, professor_no, staff_no */ 
     reg_date date default sysdate/*가입일*/
 );
 
@@ -73,7 +73,7 @@ create table apply_subject( /*신청과목*/
     apply_no number primary key, /*신청과목코드 max +1*/
     student_no number not null, /*학생코드*/
     curriculum_no number not null, /*교과코드*/
-    ret_date date default sysdate,/*신청일*/
+    reg_date date default sysdate,/*신청일*/
     CONSTRAINT fk_apply_student_no FOREIGN KEY (student_no) REFERENCES student (student_no),
     CONSTRAINT fk_apply_curriculum_no FOREIGN KEY (curriculum_no) REFERENCES curriculum (curriculum_no),
     constraint uq_student_curri unique (student_no, curriculum_no)

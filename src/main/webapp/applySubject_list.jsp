@@ -17,27 +17,18 @@ list = (ArrayList<Curriculum>)request.getAttribute("curriculum_list");
 <body>
 <%@include file="./top.jsp" %>
 <section>
-	<div class="title"><h2>교육 목록</h2></div>
+	<div class="title"><h2>수강가능  목록</h2></div>
 	<div class="listTable">
-		<form name="applySubject" action="applySubject_insert" method="post">
 		<table border="1">
-			<tr>
-				<th>교육과목</th><th>교수명</th><th>강의실</th>
-				<th>수강신</th>
-			</tr>
+			<tr><th>교육과목</th><th>교수명</th><th>강의실</th></tr>
 			<% for(Curriculum c : list) { %>
 			<tr>
 				<td><%=c.getCurriculumNo() %></td>
 				<td><%=c.getProfessorName() %></td>
-				<td><%=c.getSubjectName() %></td>
-				<td><input type="checkbox" name="curriculum_no" value="<%=c.getCurriculumNo() %>"></td>
+				<td><%=c.getSubjectName() %>
 			</tr>
 			<% } %>
 		</table>
-		<div>
-			<a class="a_button" onclick="applySubject_form()">수강신청</a>
-		</div>
-		</form>
 	</div>
 </section>
 <%@include file="./footer.jsp" %>

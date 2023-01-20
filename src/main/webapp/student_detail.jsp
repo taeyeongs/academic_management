@@ -18,7 +18,7 @@ Student s = (Student)request.getAttribute("student");
 <%@include file="./top.jsp" %>
 <section>
 	<div class="title"><h2>학생 상세</h2></div>
-	<div>
+	<div class="listTable">
 		<table border="1">
 			<tr><th>학생번호</th><td><%=s.getStudentNo() %></td><th>이름</th><td><%=s.getStudentName() %></td></tr>
 			<tr><th>연락처</th><td><%=s.getStudentPhone() %></td><th>생년월일</th><td><%=s.getStudentBirth() %></td></tr>
@@ -27,8 +27,8 @@ Student s = (Student)request.getAttribute("student");
 		</table>
 		<div class="a_button_area">
 			<div><a class="a_button" onclick="location.href='./student_list'">목록</a></div>
-			<div><a class="a_button" onclick="location.href='./student_modify?studentNo=<%=s.getStudentNo() %>'">수정</a></div>
-			<div><a class="a_button" onclick="location.href='./student_delete?studentNo=<%=s.getStudentNo() %>'">삭제</a></div>
+			<div><a class="a_button" onclick="location.href='./student_modify?student_no=<%=s.getStudentNo() %>'">수정</a></div>
+			<div><a class="a_button" onclick="location.href='./student_delete?student_no=<%=s.getStudentNo() %>'">삭제</a></div>
 		</div>
 	</div>
 </section>

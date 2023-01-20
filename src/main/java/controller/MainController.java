@@ -2,9 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,9 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.filters.SetCharacterEncodingFilter;
-
 import DAO.MainDAO;
+import DTO.ApplySubject;
 import DTO.Classroom;
 import DTO.Curriculum;
 import DTO.Login;
@@ -75,10 +72,10 @@ public class MainController extends HttpServlet {
 	    // 세션 유지시간 설정(초단위로)
 	    // 60*60 = 1시간
 	    int sTime = 60*60; 
-	    session.setMaxInactiveInterval(sTime);
+//	    session.setMaxInactiveInterval(sTime);
 
 	    // 무한대설정
-//	    session.setMaxInactiveInterval(-1);
+	    session.setMaxInactiveInterval(-1);
 
 	    // 세션Id 값 가져오기
 	    String sId = session.getId();
@@ -107,10 +104,6 @@ public class MainController extends HttpServlet {
 					e.printStackTrace();
 				};
 				
-				break;
-			case "/logout_check":
-				session.invalidate();
-				site = "redirect:/";
 				break;	
 		}
 	    
@@ -118,7 +111,6 @@ public class MainController extends HttpServlet {
 	    	System.out.println("controller : / - session");
 			switch(command) {
 				case "/":
-				case "/index":
 				case "/dashboard":
 	//				session = request.getSession(false);
 					site = "dashboard.jsp";
@@ -137,7 +129,15 @@ public class MainController extends HttpServlet {
 				case "/student_detail":
 					site = studentDetail(request, response);
 					break;
-					
+				case "/student_modify":
+					site = studentModify(request, response);
+					break;
+				case "/student_update":
+					site = studentUpdate(request, response);
+					break;
+				case "/student_delete":
+					site = studentDelete(request, response);
+					break;
 					
 				case "/professor":
 				case "/professor_list":
@@ -158,6 +158,9 @@ public class MainController extends HttpServlet {
 					break;
 				case "/staff_add":
 					site = "staff_add.jsp";
+					break;
+				case "/staff_defail":
+					site = staffDetail(request, response);
 					break;
 				case "/staff_insert":
 					site = staffInsert(request, response);
@@ -215,9 +218,17 @@ public class MainController extends HttpServlet {
 					break;
 					
 					
+				case "/applySubject_list":
+					site = applySubjectList(request, response);
+					break;
+				case "/applySubject_insert":
+					site = applySubjectInsert(request, response);
+					break;
+					
+					
 				case "/logout_check":
 					session.invalidate();
-					site = "redirect:/";
+					site = "redirect:/login";
 					break;
 			}
 	    } else {
@@ -273,13 +284,25 @@ public class MainController extends HttpServlet {
 	//학생 상세
 	public String studentDetail(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Student student = main.studentDetail(Integer.parseInt(request.getParameter("studentNo")));
+			Student student = main.studentDetail(Integer.parseInt(request.getParameter("student_no")));
 			request.setAttribute("student",student);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "student_detail.jsp";
+	}
+	
+	//학생수정
+	public String studentModify(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Student student = main.studentDetail(Integer.parseInt(request.getParameter("student_no")));
+			request.setAttribute("student",student);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "student_modify.jsp";
 	}
 	
 	//학생 등록
@@ -310,6 +333,54 @@ public class MainController extends HttpServlet {
 		return "redirect:/student_list";
 	}
 	
+	
+	//학생정보 수정
+	public String studentUpdate(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Login l = new Login();
+			l.setId(request.getParameter("id"));
+			l.setChangePw(request.getParameter("change_pw"));
+			l.setPw(request.getParameter("pw"));
+		
+			Student s = new Student();
+	//	    SimpleDateFormat format = new SimpleDateFormat("yyMM");
+	//	    Date current =new Date();
+	//	    System.out.println(format.format(current));
+			s.setStudentNo(Integer.parseInt(request.getParameter("student_no")));
+			s.setStudentName(request.getParameter("student_name"));
+			s.setStudentClass(request.getParameter("student_class"));
+			s.setStudentYear(request.getParameter("student_year"));
+			s.setStudentBirth(request.getParameter("student_birth"));
+			s.setStudentPhone(request.getParameter("student_phone"));
+			main.studentUpdate(s, l);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ctx.log("학생 수정 오류");
+			request.setAttribute("error", "정상적으로 수정 되지않았습니다.");
+		}
+		return "redirect:/student_list";
+	}
+	
+	//학생삭제
+	public String studentDelete(HttpServletRequest request, HttpServletResponse response) {
+		try {
+		
+			Student s = new Student();
+	//	    SimpleDateFormat format = new SimpleDateFormat("yyMM");
+	//	    Date current =new Date();
+	//	    System.out.println(format.format(current));
+			s.setStudentNo(Integer.parseInt(request.getParameter("student_no")));
+			System.out.println("controller - studentDelete - ");
+			main.studentDelete(s);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ctx.log("학생 삭제 오류");
+			request.setAttribute("error", "정상적으로 삭제 되지않았습니다.");
+		}
+		return "redirect:/student_list";
+	}
 
 	
 	//////////////////////////////////////////////////////////////////
@@ -384,7 +455,7 @@ public class MainController extends HttpServlet {
 		return "staff_list.jsp";
 	}
 	//직원상세
-	public String staff(HttpServletRequest request, HttpServletResponse response) {
+	public String staffDetail(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			Staff staff = main.staffDetail(Integer.parseInt(request.getParameter("studentNo")));
 			request.setAttribute("staff", staff);
@@ -403,10 +474,6 @@ public class MainController extends HttpServlet {
 			l.setPw(request.getParameter("pw"));
 			
 			Staff s = new Staff();
-//		    SimpleDateFormat format = new SimpleDateFormat("yyMM");
-//		    Date current =new Date();
-//		    System.out.println(format.format(current));
-//			s.setStudentNo();
 			s.setStaffName(request.getParameter("staff_name"));
 			s.setStaffRank(request.getParameter("staff_rank"));
 			main.staffInsert(s, l);
@@ -417,6 +484,26 @@ public class MainController extends HttpServlet {
 			request.setAttribute("error", "정상적으로 저장되지않았습니다.");
 		}
 		return "redirect:/staff_list";
+	}
+	
+	//직원삭제
+	public String staffDelete(HttpServletRequest request, HttpServletResponse response) {
+		try {
+		
+			Staff s = new Staff();
+	//	    SimpleDateFormat format = new SimpleDateFormat("yyMM");
+	//	    Date current =new Date();
+	//	    System.out.println(format.format(current));
+			s.setStaffNo(Integer.parseInt(request.getParameter("student_no")));
+			System.out.println("controller - studentDelete - ");
+			main.staffDelete(s);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ctx.log("직원 삭제 오류");
+			request.setAttribute("error", "정상적으로 삭제 되지않았습니다.");
+		}
+		return "redirect:/student_list";
 	}
 	
 	
@@ -650,7 +737,8 @@ public class MainController extends HttpServlet {
 			Calendar end = Calendar.getInstance();
 			end.setTime(convertedEndDate);
 			
-			int curriculumNo = (int) main.curriculumInsert(s);
+			
+			int curriculumNo =  main.curriculumLastNo();
 			System.out.println("curriculumNo : " + curriculumNo);
 			if ( curriculumNo == 0) {
 				PrintWriter out = response.getWriter();
@@ -705,6 +793,8 @@ public class MainController extends HttpServlet {
 				
 			}
 			
+			s.setCurriculumNo(curriculumNo);
+			curriculumNo = main.curriculumInsert(s);
 			main.ReservationRoomInsert(params);
 
 		} catch (Exception e) {
@@ -720,25 +810,71 @@ public class MainController extends HttpServlet {
 	
 	//////////////////////////////////////////////////////////////////
 	
-	
-	
-	private void SetCharacterEncodingFilter(String string) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	//수강신청
 	public String applySubjectList(HttpServletRequest request, HttpServletResponse response) {
-		ArrayList<Curriculum> curriculumlist = main.applyCurriculumList(request, response);
+		try {
+			ArrayList<Curriculum> curriculumlist = main.applyCurriculumList(request, response);
+			System.out.println(curriculumlist.toString());
+			for(Curriculum c : curriculumlist) {
+				System.out.println(c.getCurriculumNo() +":"+c.getProfessorNo());
+			}
+			request.setAttribute("curriculum_list", curriculumlist);
+//			ArrayList<Curriculum> applySubjectlist = main.applySubjectList(request, response);
+//			request.setAttribute("applySubjectlist", applySubjectlist);
+			/*
+			 * 과정리스트 표시후 
+			 * 
+			 * */
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "applySubject_list.jsp";
 		
-//		ArrayList<Curriculum> applySubjectlist = main.applySubjectList(request, response);
-		request.setAttribute("curriculumList", curriculumlist);
-//		request.setAttribute("applySubjectlist", applySubjectlist);
-		/*
-		 * 과정리스트 표시후 
-		 * 
-		 * */
-		return "";
+	}
+	
+	//수강신청상세
+	public String applySubjectDetail(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Curriculum curriculum = main.curriculumDetail(Integer.parseInt(request.getParameter("curriculumNo")));
+			request.setAttribute("curriculum",curriculum);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "applySubject_detail.jsp";
+	}
+		
+	//수강신청 
+	public String applySubjectInsert(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			ApplySubject apply = new ApplySubject();
+			HttpSession session = request.getSession();
+			int loginTypeNo = (Integer)session.getAttribute("login_type_no");
+//			int curriculumNo = Integer.parseInt(request.getParameter("curriculum_no"));
+			
+			
+//			if(session.getAttribute("login_type").equals("S")) {
+				String[] chkbox = request.getParameterValues("curriculum_no");
+				 
+				System.out.println("applySubjectInsert - " + chkbox.length);
+				for( int i = 0; i < chkbox.length; i ++ ) {
+					apply.setStudentNo(loginTypeNo);
+					apply.setCurriculumNo(Integer.parseInt(chkbox[i])); 
+				    System.out.println(chkbox[i]);
+				}
+				
+				
+						
+//				main.applySubjectInsert(apply);
+//				return "redirect:/curriculum_list";
+//			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "redirect:/applySubject_list";
 	}
 	//점수
 	//출석

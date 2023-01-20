@@ -13,7 +13,6 @@
 <section>
 <div>
 dashboard
-<button onclick="location.href='./logout_check'">로그아웃</button>
 </div>
 </section>
 <%@include file="./footer.jsp" %>

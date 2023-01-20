@@ -5,6 +5,9 @@ public class Curriculum {
 	int curriculumNo;
 	int professorNo;
 	int subjectNo;
+	String professorName;
+	String subjectName;
+	
 	public int getCurriculumNo() {
 		return curriculumNo;
 	}
@@ -22,6 +25,18 @@ public class Curriculum {
 	}
 	public void setSubjectNo(int subjectNo) {
 		this.subjectNo = subjectNo;
+	}
+	public String getProfessorName() {
+		return professorName;
+	}
+	public void setProfessorName(String professorName) {
+		this.professorName = professorName;
+	}
+	public String getSubjectName() {
+		return subjectName;
+	}
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 	
 }

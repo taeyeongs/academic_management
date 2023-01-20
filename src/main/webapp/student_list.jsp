@@ -28,7 +28,7 @@
 				<th>수강</th>
 			</tr>
 			<% for(Student s : list) { %>
-			<tr onclick="location.href='./student_detail?studentNo=<%=s.getStudentNo()%>'" onMouseOver="this.style.cursor='hand'">
+			<tr onclick="location.href='./student_detail?student_no=<%=s.getStudentNo()%>'" style="cursor:pointer" >
 				<th><%=s.getStudentNo() %></th>
 				<th><%=s.getStudentName() %></th>
 				<th><%=s.getStudentClass() %></th>
